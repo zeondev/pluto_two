@@ -1,6 +1,13 @@
 "use strict";
 
 import compatibility from "./libs/compatibility.js";
+import Html from "./libs/html.js";
+import windowSystem from "./libs/windowSystem.js";
+
+function getCoreStyles() {
+  if (Html.qs("#core-styles")) return Html.qs("#core-styles");
+  else return new Html("style").attr({ id: "core-styles" }).appendTo("head");
+}
 
 let Security = {
   check: (pkgData) => {
@@ -65,6 +72,8 @@ let Packages = {
       } else {
         privilegedApp = pkgData.privs === 1 ? true : false;
       }
+    } else {
+      privilegedApp = pkgData.privs === 1 ? true : false;
     }
 
     console.log(privilegedApp);
@@ -94,12 +103,36 @@ let Packages = {
           : null,
     };
 
+    if (pkg.default.style) {
+      let style = getCoreStyles();
+      let styleHtml = style.getHtml();
+      // I know this has a flaw due to it working like this,
+      // a malicious package could technically break other apps' styles if it wanted to.
+      // A better workaround for later would be to use an array of known packages.
+      if (
+        !styleHtml.includes(`/* Styles for ${pkgData.name} */`) &&
+        typeof pkg.default.style === "string"
+      )
+        style.html(
+          styleHtml +
+            `\n\n/* Styles for ${pkgData.name} */\n\n${pkg.default.style}`
+        );
+    }
+
     pkg.default.start(PackageLib);
 
     return Processes.get(pid);
   },
-  Run(appID) {
-    
+  async Run(appID, args = [], denySecurity = false) {
+    let appIDarr = appID.split(":");
+    let appCategory = appIDarr[0];
+    appIDarr.shift();
+    let appIDstr = appIDarr.join(":");
+    return Core.Packages.startFromURL(
+      "/pkgs/" + appCategory + "/" + appIDstr + ".js",
+      args,
+      denySecurity
+    );
   },
 };
 
@@ -109,12 +142,10 @@ let Core = {
   Security,
 };
 
+windowSystem.init(Core);
+
 window.Core = Core;
 
-// document.body.appendChild(
-//   compatibility.start(
-//     await fetch("/compatibility/pkgs/apps/AppStore.js").then((r) => r.text())
-//   )
-// );
-
 window.compatibility = compatibility;
+
+Core.Packages.startFromURL("/pkgs/system/BootLoader.js", [], true);

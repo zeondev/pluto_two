@@ -246,7 +246,8 @@ audio::-webkit-media-controls-enclosure {
 }
 
 .win-window.closing {
-  animation: slide-down var(--animation-duration) var(--easing-function) forwards;
+  display: none !important;
+  /* animation: slide-down var(--animation-duration) var(--easing-function) forwards; */
   pointer-events: none !important;
 }
 
@@ -273,8 +274,7 @@ audio::-webkit-media-controls-enclosure {
   transition-duration: var(--animation-duration);
   transition-timing-function: var(--easing-function);
   box-shadow: 0px 0px 28px 2px rgba(0, 0, 0, 0.41);
-
-  animation: slide-up var(--animation-duration) var(--easing-function) forwards;
+  /* animation: slide-up var(--animation-duration) var(--easing-function) forwards; */
 }
 
 .slideUp {

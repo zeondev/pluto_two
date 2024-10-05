@@ -2,8 +2,6 @@ import Html from "/libs/html.js";
 import Ws from "/libs/windowSystem.js";
 import compatibility from "/libs/compatibility.js";
 
-Ws.init();
-
 let myWindow;
 
 const pkg = {

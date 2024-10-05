@@ -5,6 +5,80 @@ const FILE_TYPE = {
   Folder: 1,
 };
 
+// let templateFsLayout = {
+//   Root: {
+//     data: {
+//       "README.md": {
+//         data: "This is the root folder of your file system. You can create new folders and files here.",
+//         metaData: {
+//           created: Date.now(),
+//           modified: Date.now(),
+//           type: FILE_TYPE.File, // 0
+//           owner: "root",
+//           read: true,
+//           write: true,
+//         },
+//       },
+//     },
+//     metaData: {
+//       created: Date.now(),
+//       modified: Date.now(),
+//       type: FILE_TYPE.Folder, // 1
+//       owner: "root",
+//       read: true,
+//       write: true,
+//     },
+//   },
+// };
+
+// let templateFsLayout = {
+//   Registry: {},
+//   Root: {
+//     Pluto: {
+//       panics: {
+//         "README.MD":
+//           "This folder is designed to help store logs when Pluto crashes. If you have any worries about the logs please contact us with them.",
+//       },
+//       config: {
+//         "appearanceConfig.json": JSON.stringify({
+//           wallpaper: "./assets/wallpapers/space.png",
+//           useThemeWallpaper: true,
+//           theme: "dark.theme",
+//           sidebarType: "vertical",
+//         }),
+//         "settingsConfig.json": JSON.stringify({
+//           warnSecurityIssues: true,
+//         }),
+//         themes: {
+//           "light.theme":
+//             '{"version":1,"name":"Light","description":"A built-in theme.","values":null,"cssThemeDataset":"light","wallpaper":"./assets/wallpapers/light.png"}',
+//           "dark.theme":
+//             '{"version":1,"name":"Dark","description":"A built-in theme.","values":null,"cssThemeDataset":"dark","wallpaper":"./assets/wallpapers/space.png"}',
+//           "grey.theme":
+//             '{"version":1,"name":"Grey","description":"A built-in theme.","values":null,"cssThemeDataset":"grey","wallpaper":"./assets/wallpapers/grey.svg"}',
+//           "red.theme":
+//             '{"version":1,"name":"Red","description":"A built-in theme.","values":null,"cssThemeDataset":"red","wallpaper":"./assets/wallpapers/red.png"}',
+//           "green.theme":
+//             '{"version":1,"name":"Green","description":"A built-in theme.","values":null,"cssThemeDataset":"green","wallpaper":"./assets/wallpapers/green.jpg"}',
+//           "purple.theme":
+//             '{"version":1,"name":"Purple","description":"A built-in theme.","values":null,"cssThemeDataset":"purple","wallpaper":"./assets/wallpapers/purple.svg"}',
+//         },
+//       },
+//       apps: {
+//         "README.MD":
+//           "This folder contains all the apps that you have downloaded. If you have any questions about them please contact us.",
+//       },
+//       startup: "",
+//     },
+//     Desktop: {},
+//     Documents: {},
+//     Downloads: {},
+//     Pictures: {},
+//     Videos: {},
+//     Music: {},
+//   },
+// };
+
 let templateFsLayout = {
   Root: {
     data: {
@@ -14,6 +88,264 @@ let templateFsLayout = {
           created: Date.now(),
           modified: Date.now(),
           type: FILE_TYPE.File, // 0
+          owner: "root",
+          read: true,
+          write: true,
+        },
+      },
+      Pluto: {
+        data: {
+          panics: {
+            data: {
+              "README.MD": {
+                data: "This folder is designed to help store logs when Pluto crashes. If you have any worries about the logs please contact us with them.",
+                metaData: {
+                  created: Date.now(),
+                  modified: Date.now(),
+                  type: FILE_TYPE.File, // 0
+                  owner: "root",
+                  read: true,
+                  write: true,
+                },
+              },
+            },
+            metaData: {
+              created: Date.now(),
+              modified: Date.now(),
+              type: FILE_TYPE.Folder, // 1
+              owner: "root",
+              read: true,
+            },
+          },
+          config: {
+            data: {
+              "appearanceConfig.json": {
+                data: JSON.stringify({
+                  wallpaper: "./assets/wallpapers/space.png",
+                  useThemeWallpaper: true,
+                  theme: "dark.theme",
+                  sidebarType: "vertical",
+                }),
+                metaData: {
+                  created: Date.now(),
+                  modified: Date.now(),
+                  type: FILE_TYPE.File, // 0
+                  owner: "root",
+                  read: true,
+                  write: true,
+                },
+              },
+              "settingsConfig.json": {
+                data: JSON.stringify({
+                  warnSecurityIssues: true,
+                }),
+                metaData: {
+                  created: Date.now(),
+                  modified: Date.now(),
+                  type: FILE_TYPE.File, // 0
+                  owner: "root",
+                  read: true,
+                  write: true,
+                },
+              },
+
+              themes: {
+                data: {
+                  "light.theme": {
+                    data: '{"version":1,"name":"Light","description":"A built-in theme.","values":null,"cssThemeDataset":"light","wallpaper":"./assets/wallpapers/light.png"}',
+                    metaData: {
+                      created: Date.now(),
+                      modified: Date.now(),
+                      type: FILE_TYPE.File, // 0
+                      owner: "root",
+                      read: true,
+                      write: true,
+                    },
+                  },
+                  "dark.theme": {
+                    data: '{"version":1,"name":"Dark","description":"A built-in theme.","values":null,"cssThemeDataset":"dark","wallpaper":"./assets/wallpapers/space3.png"}',
+                    metaData: {
+                      created: Date.now(),
+                      modified: Date.now(),
+                      type: FILE_TYPE.File, // 0
+                      owner: "root",
+                      read: true,
+                      write: true,
+                    },
+                  },
+                  "grey.theme": {
+                    data: '{"version":1,"name":"Grey","description":"A built-in theme.","values":null,"cssThemeDataset":"grey","wallpaper":"./assets/wallpapers/grey.svg"}',
+                    metaData: {
+                      created: Date.now(),
+                      modified: Date.now(),
+                      type: FILE_TYPE.File, // 0
+                      owner: "root",
+                      read: true,
+                      write: true,
+                    },
+                  },
+                  "red.theme": {
+                    data: '{"version":1,"name":"Red","description":"A built-in theme.","values":null,"cssThemeDataset":"red","wallpaper":"./assets/wallpapers/red.png"}',
+                    metaData: {
+                      created: Date.now(),
+                      modified: Date.now(),
+                      type: FILE_TYPE.File, // 0
+                      owner: "root",
+                      read: true,
+                      write: true,
+                    },
+                  },
+                  "green.theme": {
+                    data: '{"version":1,"name":"Green","description":"A built-in theme.","values":null,"cssThemeDataset":"green","wallpaper":"./assets/wallpapers/green.jpg"}',
+                    metaData: {
+                      created: Date.now(),
+                      modified: Date.now(),
+                      type: FILE_TYPE.File, // 0
+                      owner: "root",
+                      read: true,
+                      write: true,
+                    },
+                  },
+                  "purple.theme": {
+                    data: '{"version":1,"name":"Purple","description":"A built-in theme.","values":null,"cssThemeDataset":"purple","wallpaper":"./assets/wallpapers/purple.svg"}',
+                    metaData: {
+                      created: Date.now(),
+                      modified: Date.now(),
+                      type: FILE_TYPE.File, // 0
+                      owner: "root",
+                      read: true,
+                      write: true,
+                    },
+                  },
+                  metaData: {
+                    created: Date.now(),
+                    modified: Date.now(),
+                    type: FILE_TYPE.Folder, // 1
+                    owner: "root",
+                    read: true,
+                  },
+                },
+                metaData: {
+                  created: Date.now(),
+                  modified: Date.now(),
+                  type: FILE_TYPE.Folder, // 1
+                  owner: "root",
+                  read: true,
+                },
+              },
+            },
+            metaData: {
+              created: Date.now(),
+              modified: Date.now(),
+              type: FILE_TYPE.Folder, // 1
+              owner: "root",
+              read: true,
+            },
+          },
+          apps: {
+            data: {
+              "README.MD": {
+                data: "This folder contains all the apps that you have downloaded. If you have any questions about them please contact us.",
+                metaData: {
+                  created: Date.now(),
+                  modified: Date.now(),
+                  type: FILE_TYPE.File, // 0
+                  owner: "root",
+                  read: true,
+                  write: true,
+                },
+              },
+            },
+            metaData: {
+              created: Date.now(),
+              modified: Date.now(),
+              type: FILE_TYPE.Folder, // 1
+              owner: "root",
+              read: true,
+            },
+          },
+          startup: {
+            data: "",
+            metaData: {
+              created: Date.now(),
+              modified: Date.now(),
+              type: FILE_TYPE.File, // 0
+              owner: "root",
+              read: true,
+              write: true,
+            },
+          },
+        },
+        metaData: {
+          created: Date.now(),
+          modified: Date.now(),
+          type: FILE_TYPE.Folder, // 1
+          owner: "root",
+          read: true,
+          write: true,
+        },
+      },
+      Desktop: {
+        data: {},
+        metaData: {
+          created: Date.now(),
+          modified: Date.now(),
+          type: FILE_TYPE.Folder, // 1
+          owner: "root",
+          read: true,
+          write: true,
+        },
+      },
+      Documents: {
+        data: {},
+        metaData: {
+          created: Date.now(),
+          modified: Date.now(),
+          type: FILE_TYPE.Folder, // 1
+          owner: "root",
+          read: true,
+          write: true,
+        },
+      },
+      Downloads: {
+        data: {},
+        metaData: {
+          created: Date.now(),
+          modified: Date.now(),
+          type: FILE_TYPE.Folder, // 1
+          owner: "root",
+          read: true,
+          write: true,
+        },
+      },
+      Pictures: {
+        data: {},
+        metaData: {
+          created: Date.now(),
+          modified: Date.now(),
+          type: FILE_TYPE.Folder, // 1
+          owner: "root",
+          read: true,
+          write: true,
+        },
+      },
+      Videos: {
+        data: {},
+        metaData: {
+          created: Date.now(),
+          modified: Date.now(),
+          type: FILE_TYPE.Folder, // 1
+          owner: "root",
+          read: true,
+          write: true,
+        },
+      },
+      Music: {
+        data: {},
+        metaData: {
+          created: Date.now(),
+          modified: Date.now(),
+          type: FILE_TYPE.Folder, // 1
           owner: "root",
           read: true,
           write: true,
@@ -36,8 +368,8 @@ const Vfs = {
   // and the value is either a string (for file contents) or another object (for a subfolder)
   fileSystem: {},
   async save() {
-    await localStorage.setItem("newFS", JSON.stringify(this.fileSystem));
-    this.fileSystem = JSON.parse(await localStorage.getItem("newFS"));
+    await localforage.setItem("newFS", JSON.stringify(this.fileSystem));
+    this.fileSystem = JSON.parse(await localforage.getItem("newFS"));
   },
   async exportFS() {
     return this.fileSystem;
@@ -46,14 +378,14 @@ const Vfs = {
     if (fsObject === true) {
       this.fileSystem = templateFsLayout;
     } else if (
-      !(await localStorage.getItem("newFS")) &&
+      !(await localforage.getItem("newFS")) &&
       fsObject === templateFsLayout
     ) {
       this.fileSystem = fsObject;
     } else if (fsObject !== templateFsLayout) {
       this.fileSystem = fsObject;
     } else {
-      const existingFs = JSON.parse(await localStorage.getItem("newFS"));
+      const existingFs = JSON.parse(await localforage.getItem("newFS"));
 
       // this.fileSystem = {...templateFsLayout, ...existingFs};
       this.fileSystem = existingFs;

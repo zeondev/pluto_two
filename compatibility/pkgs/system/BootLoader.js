@@ -223,10 +223,10 @@ export default {
       // await Root.Core.startPkg("apps:TaskManager", true, true);
       // destroy loading screen
 
-      // ply startup stound
-      let a = new Audio("./assets/startup.wav");
-      a.volume = 0.5;
-      a.play();
+      // // ply startup stound
+      // let a = new Audio("./assets/startup.wav");
+      // a.volume = 0.5;
+      // a.play();
 
       // Console
       const consoleApp = await Root.Core.startPkg("system:Console", true, true);

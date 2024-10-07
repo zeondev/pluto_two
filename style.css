@@ -17,17 +17,15 @@ body {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-*:not(
-    .resize-grips,
-    .resize-grip,
-    input,
-    textarea,
-    button,
-    button *,
-    select,
-    select *,
-    a
-  ) {
+*:not(.resize-grips,
+  .resize-grip,
+  input,
+  textarea,
+  button,
+  button *,
+  select,
+  select *,
+  a) {
   cursor: var(--cursor-default) 2 2, auto !important;
 }
 
@@ -124,53 +122,43 @@ textarea,
 }
 
 .slideInFromLeft {
-  animation: slideInFromLeft var(--animation-duration) var(--easing-function)
-    forwards;
+  animation: slideInFromLeft var(--animation-duration) var(--easing-function) forwards;
 }
 
 .slideInFromRight {
-  animation: slideInFromRight var(--animation-duration) var(--easing-function)
-    forwards;
+  animation: slideInFromRight var(--animation-duration) var(--easing-function) forwards;
 }
 
 .shortSlideInFromLeft {
-  animation: slideInFromLeft var(--short-animation-duration)
-    var(--easing-function) forwards;
+  animation: slideInFromLeft var(--short-animation-duration) var(--easing-function) forwards;
 }
 
 .shortSlideInFromRight {
-  animation: slideInFromRight var(--short-animation-duration)
-    var(--easing-function) forwards;
+  animation: slideInFromRight var(--short-animation-duration) var(--easing-function) forwards;
 }
 
 .slideInFromBottom {
-  animation: slideInFromBottom var(--animation-duration) var(--easing-function)
-    forwards;
+  animation: slideInFromBottom var(--animation-duration) var(--easing-function) forwards;
 }
 
 .slideInFromTop {
-  animation: slideInFromTop var(--animation-duration) var(--easing-function)
-    forwards;
+  animation: slideInFromTop var(--animation-duration) var(--easing-function) forwards;
 }
 
 .slideInCenteredFromBottom {
-  animation: slideInCenteredFromBottom var(--animation-duration)
-    var(--easing-function) forwards;
+  animation: slideInCenteredFromBottom var(--animation-duration) var(--easing-function) forwards;
 }
 
 .slideInCenteredFromTop {
-  animation: slideInCenteredFromTop var(--animation-duration)
-    var(--easing-function) forwards;
+  animation: slideInCenteredFromTop var(--animation-duration) var(--easing-function) forwards;
 }
 
 .shortSlideInFromBottom {
-  animation: slideInFromBottom var(--short-animation-duration)
-    var(--easing-function) forwards;
+  animation: slideInFromBottom var(--short-animation-duration) var(--easing-function) forwards;
 }
 
 .shortSlideInFromTop {
-  animation: slideInFromTop var(--short-animation-duration)
-    var(--easing-function) forwards;
+  animation: slideInFromTop var(--short-animation-duration) var(--easing-function) forwards;
 }
 
 @keyframes slideInFromLeft {
@@ -360,8 +348,7 @@ iframe {
 }
 
 .win-window.closing {
-  animation: slide-down var(--animation-duration) var(--easing-function)
-    forwards;
+  animation: slide-down var(--animation-duration) var(--easing-function) forwards;
 }
 
 .win-window.dragging {
@@ -401,11 +388,11 @@ iframe {
   box-shadow: none;
 }
 
-.win-window.max > .win-titlebar > .buttons > .win-btn.win-minimize {
+.win-window.max>.win-titlebar>.buttons>.win-btn.win-minimize {
   visibility: collapse;
 }
 
-.desktop ~ .win-window.max {
+.desktop~.win-window.max {
   height: calc(100% - 42px - 12px) !important;
 }
 
@@ -583,6 +570,10 @@ iframe {
   position: relative;
 }
 
+.win-content .modal {
+  position: absolute !important;
+}
+
 .container {
   padding: 10px;
 }
@@ -715,8 +706,7 @@ iframe {
   margin: 0 auto;
   height: 70%;
   /* make it slide in */
-  animation: slideInFromBottom var(--animation-duration) var(--easing-function)
-    forwards;
+  animation: slideInFromBottom var(--animation-duration) var(--easing-function) forwards;
 }
 
 .welcome-wrapper .page-wrapper {
@@ -872,17 +862,15 @@ option {
   margin: 4px;
 }
 
-*:not(
-    .resize-grips,
-    .resize-grip,
-    input,
-    textarea,
-    button,
-    button *,
-    select,
-    select *,
-    a
-  ) {
+*:not(.resize-grips,
+  .resize-grip,
+  input,
+  textarea,
+  button,
+  button *,
+  select,
+  select *,
+  a) {
   cursor: var(--cursor-default) 2 2, auto !important;
 }
 
@@ -963,6 +951,7 @@ textarea,
   flex-shrink: 0;
   width: 100%;
 }
+
 .sidebar button {
   padding: 4px;
   display: flex;
@@ -971,87 +960,416 @@ textarea,
   width: 32px;
   flex-shrink: 0;
 }
+
 .sidebar button:hover {
   background-color: var(--neutral);
 }
+
 .sidebar button:focus,
 .sidebar button:active {
   background-color: transparent;
 }
+
 @keyframes slide-up {
   0% {
     transform: translateY(50%) scale(0.85);
     opacity: 0;
     pointer-events: all;
   }
+
   99% {
     transform: translateY(0);
     opacity: 1;
     pointer-events: all;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
   }
 }
+
 @keyframes slide-down {
   0% {
     transform: translateY(0);
     opacity: 1;
     pointer-events: none;
   }
+
   100% {
     transform: translateY(50%) scale(0.85);
     opacity: 0;
     pointer-events: none;
   }
 }
+
 @keyframes shortSlideUp {
   0% {
     transform: translateY(25%) scale(0.85);
     opacity: 0;
     pointer-events: none;
   }
+
   99% {
     transform: translateY(0);
     opacity: 1;
     pointer-events: none;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
   }
 }
+
 @keyframes shortSlideDown {
   0% {
     transform: translateY(0);
     opacity: 1;
     pointer-events: none;
   }
+
   100% {
     transform: translateY(25%) scale(0.85);
     opacity: 0;
     pointer-events: none;
   }
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
+
 @keyframes fadeOut {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
 }
+
 [disabled] {
   background-color: var(--unfocused) !important;
   color: rgba(var(--text-rgb), 0.5) !important;
   cursor: var(--cursor-not-allowed) 10 10, not-allowed !important;
+}
+
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.padded {
+  padding: 16px 18px;
+}
+
+.pad {
+  padding: 8px;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
+.mr-auto {
+  margin-right: auto;
+}
+
+.mb-auto {
+  margin-bottom: auto;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+
+.mt-0 {
+  margin-top: 0;
+}
+
+.mt-1 {
+  margin-top: 4px !important;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.mr-0 {
+  margin-right: 0;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.mb-1 {
+  margin-bottom: 4px;
+}
+
+.mb-2 {
+  margin-bottom: 8px;
+}
+
+.ml-0 {
+  margin-left: 0;
+}
+
+.o-h {
+  overflow: hidden !important;
+}
+
+p {
+  margin: 8px 0;
+}
+
+.modal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #0009;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999999;
+  top: 0;
+  left: 0;
+  animation: fadeIn var(--animation-duration) linear;
+}
+
+.modal.closing {
+  animation: fadeOut var(--animation-duration) linear;
+  pointer-events: none !important;
+}
+
+.modal.closing .modal-content {
+  animation: shortSlideDown var(--animation-duration) var(--easing-function) forwards;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--outline);
+  border-radius: 8px;
+  min-width: 200px;
+  min-height: 140px;
+  max-width: 480px;
+  max-height: 440px;
+  overflow: clip;
+  animation: shortSlideUp var(--animation-duration) var(--easing-function);
+}
+
+.win-window .win-content .modal {
+  padding: 16px;
+}
+
+.win-window .win-content .modal-content {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.modal .modal-content .modal-header {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  background-color: var(--header);
+  flex-shrink: 0;
+  border-radius: 5px 5px 0 0;
+}
+
+.modal .modal-content .modal-body {
+  padding: 16px 18px;
+  background-color: var(--root);
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 0 0 5px 5px;
+  overflow: auto;
+}
+
+.modal-body> :first-child {
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+.modal-body> :first-child table {
+  white-space: normal;
+}
+
+.modal-body .flex-group {
+  justify-content: flex-end;
+}
+
+.flex-group {
+  display: flex;
+  gap: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+table>tbody>tr>td div {
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+tr {
+  transition: none !important;
+}
+
+tr:hover {
+  background-color: var(--header);
+}
+
+thead::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--outline);
+  transition: background-color 1.5s var(--easing-function);
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  background: var(--root);
+}
+
+thead tr {
+  height: 30px;
+}
+
+th {
+  padding: 4px 8px;
+  font-weight: normal;
+  text-align: left;
+}
+
+td {
+  padding: 4px 8px;
+}
+
+.table-selected {
+  background-color: var(--neutral) !important;
+  color: var(--text);
+}
+
+*::-webkit-scrollbar {
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  width: 0.5vw;
+  z-index: -100;
+}
+
+*::-webkit-scrollbar-track {
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  opacity: 0;
+  z-index: -100;
+}
+
+*::-webkit-scrollbar-track-piece {
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  opacity: 0;
+  z-index: -100;
+}
+
+*::-webkit-scrollbar-thumb {
+  opacity: 1;
+  background-color: var(--neutral);
+  border-radius: 2000px;
+  z-index: 999999;
+}
+
+::-webkit-scrollbar {
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  width: 0.5vw;
+  z-index: -100;
+}
+
+::-webkit-scrollbar-track {
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  opacity: 0;
+  z-index: -100;
+}
+
+::-webkit-scrollbar-track-piece {
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  opacity: 0;
+  z-index: -100;
+}
+
+::-webkit-scrollbar-thumb {
+  opacity: 1;
+  background-color: var(--neutral);
+  border-radius: 2000px;
+  z-index: 999999;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--neutral) var(--root);
+  box-sizing: border-box;
+  touch-action: none !important;
+  transition-property: background-color, color, border-color;
+  transition-duration: 0.1s;
+  transition-timing-function: var(--easing-function);
+}
+
+
+*:empty {
+  transition-property: background-color, color, border-color;
+  transition-duration: 0.5s;
+  transition-timing-function: var(--easing-function);
 }

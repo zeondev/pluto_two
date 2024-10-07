@@ -50,7 +50,6 @@ export default {
       text-align: center;
       left: 50%;
       padding: 6px 14px 6px 14px;
-      height: 40px;
       overflow: visible;
       transform: translateX(-50%);
       z-index: 9999999;

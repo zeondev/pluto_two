@@ -54,9 +54,10 @@ const pkg = {
     // ThemeLib.setCurrentTheme("dark");
     await Root.Core.Packages.Run("ui:Desktop");
     Root.Core.Packages.Run("apps:Example");
+    Root.Core.Packages.Run("apps:Compatibility");
 
     // ply startup stound
-    let a = new Audio("./assets/notify.wav");
+    let a = new Audio("./assets/startup.wav");
     a.volume = 0.5;
     a.play();
 

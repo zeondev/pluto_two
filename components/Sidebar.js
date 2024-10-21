@@ -6,7 +6,6 @@ export default {
     const sideBar = new Html("div").class("col", "sidebar");
 
     buttons.forEach((b) => {
-      alert(JSON.stringify(b));
       let popup;
       let button = new Html("button")
         .class("transparent")

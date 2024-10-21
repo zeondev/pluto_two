@@ -94,6 +94,10 @@ let Packages = {
       Arguments: args,
       Core: privilegedApp == true ? Core : null,
       Packages: privilegedApp == true ? Packages : null,
+      async End() {
+        let result = await pkgData.end();
+        if (result == true) Processes.remove(pid);
+      },
       Processes:
         privilegedApp == true
           ? {

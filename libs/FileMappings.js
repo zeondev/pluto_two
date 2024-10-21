@@ -2,12 +2,17 @@ let L = {};
 let C = {};
 
 import Vfs from "./vfs.js";
-const vfs = Vfs;
 
 export default {
+  name: "MIME File Mapping Library",
+  description:
+    "This library maps MIME types with applications and labels in order to fulfill launching files from desktop and FileManager use cases.",
+  ver: "v1.6.2", // Supports minimum Core version of v1.6.2
+  type: "library",
   init: (l, c) => {
     L = l;
     C = c;
+    alert("bal");
   },
   mappings: {
     txt: {
@@ -146,7 +151,7 @@ export default {
   },
   retrieveAllMIMEdata: async function (path) {
     // pass in path, if shrt file, run custom shrt algorithm (returns everything that a regular run does), else, find file format, return icon, label, file name, and onclick events
-    await vfs.importFS();
+    await Vfs.importFS();
     /**@type array */
     let pathLast = path.split("/").pop();
     let pathSplitDot = pathLast.split(".");
@@ -156,7 +161,7 @@ export default {
     if (ext === "shrt") {
       let shrtFile = {};
       try {
-        shrtFile = JSON.parse(await vfs.readFile(path));
+        shrtFile = JSON.parse(await Vfs.readFile(path));
       } catch (e) {
         return {
           name: "Unknown",
@@ -185,14 +190,14 @@ export default {
         icon: shrtFile.icon,
         fullName: `Desktop shortcut (${shrtFile.fullName})`,
         onClick: (c) => {
-          c.startPkg(shrtFile.fullName, true, true);
+          c.Packages.Run(shrtFile.fullName, true, true);
         },
       };
     } else if (
       (ext === "app" && path.startsWith("Registry/AppStore/")) ||
       (ext === "pml" && path.startsWith("Registry/AppStore/"))
     ) {
-      const asExists = await vfs.whatIs(
+      const asExists = await Vfs.whatIs(
         "Registry/AppStore/_AppStoreIndex.json"
       );
 
@@ -207,7 +212,7 @@ export default {
         };
       } else {
         const as = JSON.parse(
-          await vfs.readFile("Registry/AppStore/_AppStoreIndex.json")
+          await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json")
         );
 
         if (window.__DEBUG === true) console.log(fileName, as);
@@ -221,9 +226,9 @@ export default {
               ctxMenuApp: undefined,
               invalid: false,
               async onClick() {
-                C.startPkg(
+                C.Packages.Run(
                   "data:text/javascript," +
-                    encodeURIComponent(await vfs.readFile(path)),
+                    encodeURIComponent(await Vfs.readFile(path)),
                   false,
                   false
                 );
@@ -237,8 +242,11 @@ export default {
               ctxMenuApp: undefined,
               invalid: false,
               async onClick() {
-                let x = await c.startPkg("apps:PML", true, true);
-                x.proc.send({ type: "loadFile", path });
+                let x = await C.Packages.Run(
+                  "apps:PML",
+                  { data: { type: "loadFile", path } },
+                  true
+                );
               },
             };
           }
@@ -255,9 +263,9 @@ export default {
         }
       }
     } else {
-      let icon = await vfs.whatIs(path);
+      let icon = await Vfs.whatIs(path);
       let map = {};
-      if (icon === "dir") {
+      if (icon === "Folder") {
         map = {
           type: "dir",
           label: icon === "File folder",
@@ -271,7 +279,7 @@ export default {
         map = this.mappings[ext.toLowerCase()];
         icon = map.icon;
       } else {
-        if (icon !== "dir")
+        if (icon !== "Folder")
           map = {
             type: "file",
             label: "Unknown file",
@@ -288,19 +296,28 @@ export default {
         onClick: async (c) => {
           if (map.opensWith === null) return;
           if (map.opensWith === "evaluate") {
-            c.startPkg(
+            c.Packages.Run(
               "data:text/javascript," +
-                encodeURIComponent(await vfs.readFile(path)),
+                encodeURIComponent(await Vfs.readFile(path)),
               false,
               false
             );
             return;
           } else {
-            let x = await c.startPkg(map.opensWith, true, true);
+            console.error(C, c);
+            let x;
             if (map.loadType) {
-              x.proc.send({ type: map.loadType, path });
+              x = await C.Packages.Run(
+                map.opensWith,
+                { data: { type: map.loadType, path } },
+                true
+              );
             } else {
-              x.proc.send({ type: "loadFile", path });
+              x = await C.Packages.Run(
+                map.opensWith,
+                { data: { type: "loadFile", path } },
+                true
+              );
             }
           }
         },

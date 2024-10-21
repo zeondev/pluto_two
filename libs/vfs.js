@@ -464,6 +464,7 @@ const Vfs = {
     if (metaData.read === false) return null;
     if (current[filename]) return null;
     current[filename] = { data: "", metaData: toBeMetaData };
+    this.save();
   },
 
   // Function to write to a file at a given path

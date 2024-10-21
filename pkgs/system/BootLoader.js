@@ -2,6 +2,7 @@ import Html from "/libs/html.js";
 import Ws from "/libs/windowSystem.js";
 import Vfs from "../../libs/vfs.js";
 import ThemeLib from "../../libs/ThemeLib.js";
+import langManager from "../../libs/l10n/manager.js";
 
 let myWindow;
 
@@ -51,10 +52,15 @@ const pkg = {
       }
     }
 
-    // ThemeLib.setCurrentTheme("dark");
-    await Root.Core.Packages.Run("ui:Desktop");
-    Root.Core.Packages.Run("apps:Example");
-    Root.Core.Packages.Run("apps:Compatibility");
+    // await Root.Core.Packages.Run("ui:Desktop");
+    // await Root.Core.Packages.Run("apps:Notepad");
+    await Root.Core.Packages.Run("ui:Welcome", true, true);
+    await ThemeLib.setCurrentTheme(
+      await Vfs.readFile("Root/Pluto/config/themes/dark.theme")
+    );
+
+    // await Root.Core.Packages.Run("apps:FileManager", true, true);
+    // await Root.Core.Packages.Run("apps:Compatibility");
 
     // ply startup stound
     let a = new Audio("./assets/startup.wav");
@@ -65,6 +71,7 @@ const pkg = {
   },
   end: async function () {
     // Close the window when the process is exited
+    return false;
   },
 };
 

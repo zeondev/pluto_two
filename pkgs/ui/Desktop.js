@@ -7,7 +7,7 @@ import { css } from "../../libs/templates.js";
 let wrapper; // Lib.html | undefined
 
 export default {
-  name: "Welcome",
+  name: "Desktop",
   type: "app",
   privs: 0,
   style: css`

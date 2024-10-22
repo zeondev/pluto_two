@@ -51,59 +51,61 @@ let currentUserData = {
 };
 
 function checkUserData() {
-  if (sessionStorage.getItem("userData") !== null) {
-    try {
-      const data = JSON.parse(sessionStorage.getItem("userData"));
+  return new Promise((resolve, reject) => {
+    if (sessionStorage.getItem("userData") !== null) {
+      try {
+        const data = JSON.parse(sessionStorage.getItem("userData"));
 
-      if (data.token === undefined)
-        return Object.assign(currentUserData, stockUserData);
-      fetch("https://zeon.dev/api/public/validate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Add any additional headers needed for authentication or other purposes
-        },
-        body: JSON.stringify({
-          // Add your request data in the appropriate format
-          username: data.user,
-          token: data.token,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          if (data.status !== 200) {
-            sessionStorage.removeItem("userData");
-            return Object.assign(currentUserData, stockUserData);
-          }
-        })
-        .catch((error) => {
-          // Handle any errors that occur during the request
-          console.error("the error occurred", error);
-          sessionStorage.removeItem("userData");
+        if (data.token === undefined)
           return Object.assign(currentUserData, stockUserData);
+        fetch("https://zeon.dev/api/public/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Add any additional headers needed for authentication or other purposes
+          },
+          body: JSON.stringify({
+            // Add your request data in the appropriate format
+            username: data.user,
+            token: data.token,
+          }),
         })
-        .then(() => {
-          if (data.user && data.pfp && data.id && data.email) {
-            console.error(data);
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            if (data.status !== 200) {
+              sessionStorage.removeItem("userData");
+              return resolve(Object.assign(currentUserData, stockUserData));
+            }
+          })
+          .catch((error) => {
+            // Handle any errors that occur during the request
+            console.error("the error occurred", error);
+            sessionStorage.removeItem("userData");
+            return resolve(Object.assign(currentUserData, stockUserData));
+          })
+          .then(() => {
+            if (data.user && data.pfp && data.id && data.email) {
+              console.error(data);
 
-            currentUserData.username = data.user;
-            currentUserData.pfp = data.pfp.replace("/", "https://zeon.dev/");
-            currentUserData.id = data.id;
-            currentUserData.email = data.email;
-            currentUserData.onlineAccount = true;
-            console.error(currentUserData);
-            return currentUserData;
-          }
-        });
-    } catch (e) {
+              currentUserData.username = data.user;
+              currentUserData.pfp = data.pfp.replace("/", "https://zeon.dev/");
+              currentUserData.id = data.id;
+              currentUserData.email = data.email;
+              currentUserData.onlineAccount = true;
+              console.error(currentUserData);
+              return resolve(currentUserData);
+            }
+          });
+      } catch (e) {
+        sessionStorage.removeItem("userData");
+        return resolve(Object.assign(currentUserData, stockUserData));
+      }
+    } else {
       sessionStorage.removeItem("userData");
-      return Object.assign(currentUserData, stockUserData);
+      return resolve(Object.assign(currentUserData, stockUserData));
     }
-  } else {
-    sessionStorage.removeItem("userData");
-    return Object.assign(currentUserData, stockUserData);
-  }
+  });
 }
 console.error("CHECKEDc", currentUserData);
 console.log(sessionStorage.getItem("userData"));

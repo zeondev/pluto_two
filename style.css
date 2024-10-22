@@ -37,7 +37,7 @@ select *,
 .desktop .dock .menu .app *,
 .pointer,
 a {
-  cursor: var(--cursor-pointer) 5 0, auto !important;
+  cursor: var(--cursor-pointer) 5 3, auto !important;
 }
 
 input[type="range"],
@@ -816,40 +816,6 @@ option {
   color: var(--text);
   cursor: pointer;
   margin: 4px;
-}
-
-*:not(.resize-grips,
-  .resize-grip,
-  input,
-  textarea,
-  button,
-  button *,
-  select,
-  select *,
-  a) {
-  cursor: var(--cursor-default) 2 2, auto !important;
-}
-
-button,
-button *,
-select,
-select *,
-.desktop .dock .menu .app,
-.desktop .dock .menu .app *,
-.pointer,
-a {
-  cursor: var(--cursor-pointer) 5 0, auto !important;
-}
-
-input[type="range"],
-input[type="range"]:focus {
-  outline: none !important;
-}
-
-input:not([type="checkbox"], [type="range"]),
-textarea,
-.ace_content {
-  cursor: var(--cursor-text) 10 9, auto !important;
 }
 
 input,

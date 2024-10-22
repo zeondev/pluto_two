@@ -43,6 +43,7 @@ const pkg = {
       width: 46.875rem;
       margin: 0 auto;
       height: 41.5rem;
+      max-height: calc(100vh - 24px);
       /* make it slide in */
       animation: slideInFromBottom var(--animation-duration)
         var(--easing-function) forwards;
@@ -141,6 +142,7 @@ const pkg = {
     }
     .theme-card {
       height: 12rem;
+      max-height: 24vh;
       border-radius: 10px;
       background-size: cover;
       background-position: center;

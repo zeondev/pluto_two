@@ -58,7 +58,7 @@ export default {
       transform: translateX(-50%);
       z-index: 9999999;
       background-color: var(--root);
-      border-radius: 8px 8px 8px 8px;
+      border-radius: 16px;
       border: 1px solid var(--outline);
       box-shadow: 0 0 36px -2px var(--outline);
     }
@@ -122,7 +122,7 @@ export default {
       left: 50%;
       transform: translateX(-50%);
       background-color: var(--root);
-      border-radius: 8px;
+      border-radius: 16px;
       border: 1px solid var(--outline);
       box-shadow: 0 0 36px -2px var(--outline);
       z-index: 9999999;

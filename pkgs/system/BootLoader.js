@@ -3,6 +3,7 @@ import Ws from "/libs/windowSystem.js";
 import Vfs from "../../libs/vfs.js";
 import ThemeLib from "../../libs/ThemeLib.js";
 import langManager from "../../libs/l10n/manager.js";
+import Users from "../../libs/Users.js";
 
 let myWindow;
 
@@ -38,14 +39,14 @@ const pkg = {
 
         if (x !== undefined && x.success === true) {
           console.log(x);
-
+          console.error(x);
           ThemeLib.setCurrentTheme(x.data);
         } else {
-          console.log(x.message);
+          console.log("MESSAGE HERE", x.message);
           document.documentElement.dataset.theme = "dark";
         }
       } else {
-        // alert(1);
+        console.error("FARDED");
         ThemeLib.setCurrentTheme(
           '{"version":1,"name":"Dark","description":"A built-in theme.","values":null,"cssThemeDataset":"dark","wallpaper":"./assets/wallpapers/space.png"}'
         );
@@ -54,10 +55,14 @@ const pkg = {
 
     // await Root.Core.Packages.Run("ui:Desktop");
     // await Root.Core.Packages.Run("apps:Notepad");
-    await Root.Core.Packages.Run("ui:Welcome", true, true);
-    await ThemeLib.setCurrentTheme(
-      await Vfs.readFile("Root/Pluto/config/themes/dark.theme")
-    );
+    if (appearanceConfig.hasSetupSystem !== true) {
+      await Root.Core.Packages.Run("ui:Welcome", true, true);
+    } else {
+      await Root.Core.Packages.Run("ui:Desktop", true, true);
+    }
+    // await ThemeLib.setCurrentTheme(
+    //   await Vfs.readFile("Root/Pluto/config/themes/light.theme")
+    // );
 
     // await Root.Core.Packages.Run("apps:FileManager", true, true);
     // await Root.Core.Packages.Run("apps:Compatibility");
@@ -67,6 +72,7 @@ const pkg = {
     a.volume = 0.5;
     a.play();
 
+    window.Vfs = Vfs;
     await checkTheme();
   },
   end: async function () {

@@ -62,7 +62,10 @@ let Packages = {
       return false;
     if (pkgData.privs === undefined || typeof pkgData.privs !== "number")
       return false;
-
+    if (pkgData.style !== undefined && typeof pkgData.style !== "string")
+      return false;
+    if (pkgData.icon !== undefined && typeof pkgData.icon !== "string")
+      return false;
     if (!denySecurity) {
       if (pkgData.privs === 1) {
         let securityAccept = Security.check(pkgData);
@@ -81,6 +84,7 @@ let Packages = {
     const pid = Processes.findEmptyPid();
     Processes.add(pid, {
       pid,
+      icon: pkgData.icon,
       name: pkgData.name,
       priveleged: pkgData.privs,
       async end() {

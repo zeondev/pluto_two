@@ -12,7 +12,6 @@ export default {
   init: (l, c) => {
     L = l;
     C = c;
-    alert("bal");
   },
   mappings: {
     txt: {

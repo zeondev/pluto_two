@@ -9,6 +9,11 @@ import Accounts from "../../libs/Accounts.js";
 
 let wrapper;
 
+document.addEventListener("pluto.wallpaper-change", (e) => {
+  console.log("got wallpaper change event", e);
+  wrapper.style({ "background-image": `url(${e.detail})` });
+});
+
 const pkg = {
   name: "Welcome",
   type: "app",
@@ -217,6 +222,14 @@ const pkg = {
       (svg) => svg.text()
     );
 
+    let zeonLogoTinted = await fetch("./assets/zeon-tinted-themed.svg").then(
+      (svg) => svg.text()
+    );
+
+    let appearanceConfig = JSON.parse(
+      await Vfs.readFile("Root/Pluto/config/appearanceConfig.json")
+    );
+
     let currentPage = "p1";
 
     let pages = {
@@ -300,7 +313,7 @@ const pkg = {
             .on("click", pages.p1)
         );
       },
-      p3: () => {
+      p3: async () => {
         currentPage = "p3";
         pageWrapper.classOff("p1");
         pageWrapper.classOn("p2");
@@ -335,6 +348,7 @@ const pkg = {
                   .class("description")
               )
               .on("click", async () => {
+                appearanceConfig.theme = "dark.theme";
                 ThemeLib.setCurrentTheme(
                   JSON.parse(
                     await Vfs.readFile("Root/Pluto/config/themes/dark.theme")
@@ -354,6 +368,7 @@ const pkg = {
                   .class("description")
               )
               .on("click", async () => {
+                appearanceConfig.theme = "light.theme";
                 ThemeLib.setCurrentTheme(
                   JSON.parse(
                     await Vfs.readFile("Root/Pluto/config/themes/light.theme")
@@ -373,6 +388,7 @@ const pkg = {
                   .class("description")
               )
               .on("click", async () => {
+                appearanceConfig.theme = "green.theme";
                 ThemeLib.setCurrentTheme(
                   JSON.parse(
                     await Vfs.readFile("Root/Pluto/config/themes/green.theme")
@@ -392,6 +408,7 @@ const pkg = {
                   .class("description")
               )
               .on("click", async () => {
+                appearanceConfig.theme = "red.theme";
                 ThemeLib.setCurrentTheme(
                   JSON.parse(
                     await Vfs.readFile("Root/Pluto/config/themes/red.theme")
@@ -406,10 +423,22 @@ const pkg = {
           new Html("button")
             .text(langManager.getString("actions.next"))
             .class("primary")
-            .on("click", pages.p4),
+            .on("click", async () => {
+              pages.p4();
+              await Vfs.writeFile(
+                "Root/Pluto/config/appearanceConfig.json",
+                JSON.stringify(appearanceConfig)
+              );
+            }),
           new Html("button")
             .text(langManager.getString("actions.back"))
-            .on("click", pages.p2)
+            .on("click", async () => {
+              pages.p2();
+              await Vfs.writeFile(
+                "Root/Pluto/config/appearanceConfig.json",
+                JSON.stringify(appearanceConfig)
+              );
+            })
         );
       },
       p4: () => {
@@ -449,7 +478,15 @@ const pkg = {
                 outline: "1.5px solid rgba(255, 255, 255, 0.2)",
               })
               .appendMany(
-                new Html("img").attr({ src: "./assets/zeon-tinted.svg" }),
+                // new Html("img").attr({
+                //   src: "./assets/zeon-tinted-themed.svg",
+                // }),
+                new Html("span").html(zeonLogoTinted).style({
+                  position: "absolute",
+                  top: "2.5rem",
+                  width: "120px",
+                  height: "120px",
+                }),
 
                 new Html("div")
                   .text("Zeon " + langManager.getString("welcome.p4.account"))
@@ -647,13 +684,14 @@ const pkg = {
       pages[currentPage]();
     });
 
-    document.addEventListener("pluto.wallpaper-change", (e) => {
-      console.log("got wallpaper change event", e);
-      wrapper.style({ "background-image": `url(${e.detail})` });
-    });
-
     async function finishOOBE() {
       await Root.End();
+      appearanceConfig.hasSetupSystem = true;
+      await Vfs.writeFile(
+        "Root/Pluto/config/appearanceConfig.json",
+        JSON.stringify(appearanceConfig)
+      );
+
       await Root.Core.Packages.Run("ui:Desktop", true, true);
     }
   },

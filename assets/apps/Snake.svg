@@ -1,0 +1,21 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="64" height="64" rx="14" fill="url(#paint0_linear_3193_712)"/>
+<g style="mix-blend-mode:overlay">
+<rect x="1.5" y="1.5" width="61" height="61" rx="12.5" stroke="url(#paint1_linear_3193_712)" stroke-width="3"/>
+</g>
+<rect x="26" y="12" width="12" height="12" fill="#3BFF5A"/>
+<rect x="12" y="12" width="12" height="12" fill="#3BFF5A"/>
+<rect x="40" y="12" width="12" height="12" fill="#FF3B3B"/>
+<rect x="12" y="26" width="12" height="12" fill="#3BFF5A"/>
+<rect x="12" y="40" width="12" height="12" fill="#3BFF5A"/>
+<defs>
+<linearGradient id="paint0_linear_3193_712" x1="32" y1="64" x2="32" y2="0" gradientUnits="userSpaceOnUse">
+<stop stop-color="#123C1E"/>
+<stop offset="1" stop-color="#13221A"/>
+</linearGradient>
+<linearGradient id="paint1_linear_3193_712" x1="32" y1="0" x2="32" y2="64" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#999999" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

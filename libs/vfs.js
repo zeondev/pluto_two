@@ -217,13 +217,6 @@ let templateFsLayout = {
                       write: true,
                     },
                   },
-                  metaData: {
-                    created: Date.now(),
-                    modified: Date.now(),
-                    type: FILE_TYPE.Folder, // 1
-                    owner: "root",
-                    read: true,
-                  },
                 },
                 metaData: {
                   created: Date.now(),

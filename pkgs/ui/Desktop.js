@@ -3,13 +3,17 @@ import Ws from "../../libs/windowSystem.js";
 import compatibility from "../../libs/compatibility.js";
 import Vfs from "../../libs/vfs.js";
 import { css } from "../../libs/templates.js";
+import ThemeLib from "../../libs/ThemeLib.js";
+import Accounts from "../../libs/Accounts.js";
+import Icons from "../../components/Icons.js";
+// import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 
 let wrapper; // Lib.html | undefined
 
 export default {
   name: "Desktop",
   type: "app",
-  privs: 0,
+  privs: 1,
   style: css`
     .desktop {
       display: flex;
@@ -49,7 +53,7 @@ export default {
       align-items: flex-start;
       text-align: center;
       left: 50%;
-      padding: 6px 14px 6px 14px;
+      padding: 6px 6px 6px 6px;
       overflow: visible;
       transform: translateX(-50%);
       z-index: 9999999;
@@ -59,10 +63,10 @@ export default {
       box-shadow: 0 0 36px -2px var(--outline);
     }
     .desktop .dock .app {
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 3.4rem;
+      height: 3.4rem;
       display: flex;
-      background-color: var(--text);
+      // background-color: var(--text);
       align-self: center;
       align-items: center;
       align-content: center;
@@ -71,7 +75,7 @@ export default {
       transform-origin: center bottom;
       margin-left: 0.3rem;
       margin-right: 0.3rem;
-      border-radius: 0.5rem;
+      border-radius: 9px;
     }
     .desktop .dock .app.over {
       margin-left: 0.56em;
@@ -86,8 +90,144 @@ export default {
     .desktop .dock {
       transition: transform 0.3s ease;
     }
+
+    .desktop .dock .app svg {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+    }
+
+    .desktop .dock .app.startmenubutton {
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-left: 0.5rem;
+      margin-right: 1rem;
+      transform-origin: center center;
+    }
+
+    .desktop .dock .app.startmenubutton:hover {
+      transform: scale(1.1);
+    }
+
     .window-box.maximized-window ~ .desktop .dock {
       transform: translate(-50%, 120%) !important;
+    }
+
+    .desktop .startMenu {
+      width: 70%;
+      max-width: 450px;
+      height: 350px;
+      position: absolute;
+      bottom: calc(8px + 3.4rem + 13px + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--root);
+      border-radius: 8px;
+      border: 1px solid var(--outline);
+      box-shadow: 0 0 36px -2px var(--outline);
+      z-index: 9999999;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .desktop .startMenu.hide {
+      display: none;
+    }
+    .desktop .startMenu.show {
+      display: flex;
+    }
+
+    .desktop .startMenu .topWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .desktop .startMenu .topWrapper .actions {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .desktop .startMenu .topWrapper .actions button {
+      height: 40px;
+      width: 40px;
+      background-color: var(--root);
+      padding: 0px;
+    }
+    .desktop .startMenu .topWrapper .actions button:hover {
+      background-color: var(--neutral);
+    }
+
+    .desktop .startMenu .topWrapper .info {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    .desktop .startMenu .topWrapper .info .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .desktop .startMenu .topWrapper .info .usernameWrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .desktop .startMenu .topWrapper .info .usernameWrapper .username {
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .desktop .startMenu .topWrapper .info .usernameWrapper .status {
+      color: var(--label);
+      font-size: 0.8rem;
+    }
+
+    .desktop .startMenu .startMenuContent {
+      height: 100%;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .desktop .startMenu .startMenuContent .app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .desktop .startMenu .startMenuContent .app .icon {
+      width: 60px;
+      height: 60px;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .desktop .startMenu .startMenuContent .app .title {
+      color: var(--text);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .ghost {
+      opacity: 0;
     }
   `,
   start: async function (Root) {
@@ -107,6 +247,9 @@ export default {
     //   .appendTo(topBar)
     //   .class("topBarItem")
     //   .html("Application");
+
+    let userData = Accounts.getUserData();
+
     let dock = new Html("div")
       .appendTo(wrapper)
       .class("dock", "slideInCenteredFromBottom");
@@ -116,9 +259,208 @@ export default {
       wrapper.style({ "background-image": `url(${e.detail})` });
     });
 
+    let appearanceConfigRaw = await Vfs.readFile(
+      "Root/Pluto/config/appearanceConfig.json"
+    );
+    let appearanceConfig = JSON.parse(appearanceConfigRaw);
+
+    async function checkTheme() {
+      if (appearanceConfig.theme && appearanceConfig.theme.endsWith(".theme")) {
+        const x = ThemeLib.validateTheme(
+          await Vfs.readFile(
+            "Root/Pluto/config/themes/" + appearanceConfig.theme
+          )
+        );
+
+        console.log(x);
+
+        if (x !== undefined && x.success === true) {
+          console.log(x);
+          console.error(x);
+          ThemeLib.setCurrentTheme(x.data);
+        } else {
+          console.log("MESSAGE HERE", x.message);
+          document.documentElement.dataset.theme = "dark";
+        }
+      } else {
+        console.error("FARDED");
+        ThemeLib.setCurrentTheme(
+          '{"version":1,"name":"Dark","description":"A built-in theme.","values":null,"cssThemeDataset":"dark","wallpaper":"./assets/wallpapers/space.png"}'
+        );
+      }
+    }
+
+    checkTheme();
+
+    let startMenu = new Html("div")
+      .appendTo(wrapper)
+      .appendMany(
+        new Html("div")
+          .class("topWrapper")
+          .appendMany(
+            new Html("div")
+              .class("info")
+              .appendMany(
+                new Html("div")
+                  .class("avatar")
+                  .style({ "background-image": "url(" + userData.pfp + ")" }),
+                new Html("div")
+                  .class("usernameWrapper")
+                  .appendMany(
+                    new Html("div")
+                      .class("username")
+                      .html("Hello, " + userData.username),
+                    new Html("div")
+                      .class("status")
+                      .html(
+                        userData.onlineAccount
+                          ? "Online Account"
+                          : "Offline Account"
+                      )
+                  )
+              ),
+            new Html("div")
+              .class("actions")
+              .appendMany(
+                new Html("button").html(Icons.wrench),
+                new Html("button").html(Icons.power)
+              )
+          ),
+        new Html("div").class("startMenuContent").appendMany(
+          new Html("div").class("app").appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(./assets/apps/Radio.svg)",
+            }),
+            new Html("span").class("title").html("Radio")
+          ),
+          new Html("div").class("app").appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(./assets/apps/Assistant.svg)",
+            }),
+            new Html("span").class("title").html("Assistant")
+          ),
+          new Html("div").class("app").appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(./assets/apps/Store.svg)",
+            }),
+            new Html("span").class("title").html("Store")
+          ),
+          new Html("div").class("app").appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(./assets/apps/FileManager.svg)",
+            }),
+            new Html("span").class("title").html("Files")
+          ),
+          new Html("div").class("app").appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(./assets/apps/Settings.svg)",
+            }),
+            new Html("span").class("title").html("Settings")
+          ),
+          new Html("div").class("app").appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(./assets/apps/Weather.svg)",
+            }),
+            new Html("span").class("title").html("Weather")
+          ),
+          new Html("div").class("app").appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(./assets/apps/Terminal.svg)",
+            }),
+            new Html("span").class("title").html("Terminal")
+          ),
+          new Html("div").class("app").appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(./assets/apps/Snake.svg)",
+            }),
+            new Html("span").class("title").html("Snake")
+          )
+        )
+      )
+      .class("startMenu", "slideOutCenteredFromBottom", "hide");
+
+    let grid = document.querySelector(".desktop .startMenu .startMenuContent");
+    new Sortable(grid, {
+      animation: 150,
+      ghostClass: ".ghost",
+    });
+
+    let taskbarApps = [
+      {
+        name: "Weather",
+        icon: "./assets/apps/Weather.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:FileManager");
+        },
+      },
+      {
+        name: "Browser",
+        icon: "./assets/apps/Browser.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:FileManager");
+        },
+      },
+      {
+        name: "Radio",
+        icon: "./assets/apps/Radio.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:FileManager");
+        },
+      },
+      {
+        name: "Snake",
+        icon: "./assets/apps/Snake.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:FileManager");
+        },
+      },
+      {
+        name: "File Manager",
+        icon: "./assets/apps/FileManager.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:FileManager");
+        },
+      },
+    ];
+
+    let plutoIcon = new Html("div")
+      .appendTo(dock)
+      .class("app", "startmenubutton")
+      .html(
+        await fetch("./assets/pluto_logo_new.svg").then(async (a) => {
+          return await a.text();
+        })
+      )
+      .on("click", async () => {
+        if (startMenu.elm.classList.contains("show")) {
+          startMenu.class(
+            "slideInCenteredFromBottom",
+            "slideOutCenteredFromBottom"
+          );
+          setTimeout(() => {
+            startMenu.class("hide", "show");
+          }, 300);
+        } else {
+          startMenu.class(
+            "hide",
+            "show",
+            "slideInCenteredFromBottom",
+            "slideOutCenteredFromBottom"
+          );
+        }
+      });
+
     let appList = [];
-    for (let i = 0; i < 5; i++) {
-      let app = new Html("div").appendTo(dock).class("app");
+    for (let i = 0; i < taskbarApps.length; i++) {
+      let app = new Html("div")
+        .appendTo(dock)
+        .class("app")
+        .html(
+          await fetch(taskbarApps[i].icon).then(async (a) => {
+            return await a.text();
+          })
+        )
+        .on("click", taskbarApps[i].onClick);
       let index = i;
       appList.push(app);
       app.on("pointerenter", (e) => {

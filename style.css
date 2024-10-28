@@ -201,6 +201,14 @@ textarea,
   animation: slideInCenteredFromTop var(--animation-duration) var(--easing-function) forwards;
 }
 
+.slideOutCenteredFromBottom {
+  animation: slideOutCenteredFromBottom var(--animation-duration) var(--easing-function) forwards;
+}
+
+.slideOutCenteredFromTop {
+  animation: slideOutCenteredFromTop var(--animation-duration) var(--easing-function) forwards;
+}
+
 .shortSlideInFromBottom {
   animation: slideInFromBottom var(--short-animation-duration) var(--easing-function) forwards;
 }
@@ -278,6 +286,30 @@ textarea,
   to {
     transform: translateX(-50%) translateY(0);
     opacity: 1;
+  }
+}
+
+@keyframes slideOutCenteredFromBottom {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-50%) translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutCenteredFromTop {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
   }
 }
 

@@ -5,7 +5,7 @@ import Vfs from "../../libs/vfs.js";
 import { css } from "../../libs/templates.js";
 import ThemeLib from "../../libs/ThemeLib.js";
 import Accounts from "../../libs/Accounts.js";
-import Icons from "../../components/Icons.js";
+import Icons from "../../components/icons.js";
 // import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 
 let wrapper; // Lib.html | undefined
@@ -207,6 +207,8 @@ export default {
     }
 
     .desktop .startMenu .startMenuContent .app {
+      transition: transform 0.3s ease;
+
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -228,6 +230,10 @@ export default {
     }
     .ghost {
       opacity: 0;
+    }
+
+    .desktop .startMenu .startMenuContent .app:hover {
+      transform: scale(1.2);
     }
   `,
   start: async function (Root) {
@@ -411,7 +417,7 @@ export default {
         name: "Snake",
         icon: "./assets/apps/Snake.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:FileManager");
+          await Root.Core.Packages.Run("apps:Snake");
         },
       },
       {
@@ -482,6 +488,7 @@ export default {
         }
       });
     }
+    Root.Core.Packages.Run("apps:Snake");
   },
   end: async function () {
     wrapper.cleanup();

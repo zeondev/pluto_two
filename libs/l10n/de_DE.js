@@ -81,4 +81,7 @@ export default {
     name: "Notizblock",
     placeholder: "Hier tippen...",
   },
+  snake: {
+    name: "Schlange",
+  },
 };

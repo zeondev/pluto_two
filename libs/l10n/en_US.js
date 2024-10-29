@@ -75,4 +75,7 @@ export default {
     name: "Notepad",
     placeholder: "Start typing here...",
   },
+  snake: {
+    name: "Snake",
+  },
 };

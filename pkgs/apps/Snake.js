@@ -7,6 +7,7 @@ import Modal from "../../libs/Modal.js";
 import FileMappings from "../../libs/FileMappings.js";
 import FileDialog from "../../libs/FileDialog.js";
 import langManager from "../../libs/l10n/manager.js";
+import { css } from "../../libs/templates.js";
 
 let win;
 
@@ -14,25 +15,28 @@ let gameLoop;
 
 let speedX = 0; //speed of snake in x coordinate.
 let speedY = 0; //speed of snake in Y coordinate.
+let gameOverScreenShowing = true;
 
 function changeDirection(e) {
-  if (e.code == "ArrowUp" && speedY != 1) {
-    // If up arrow key pressed with this condition...
-    // snake will not move in the opposite direction
-    speedX = 0;
-    speedY = -1;
-  } else if (e.code == "ArrowDown" && speedY != -1) {
-    //If down arrow key pressed
-    speedX = 0;
-    speedY = 1;
-  } else if (e.code == "ArrowLeft" && speedX != 1) {
-    //If left arrow key pressed
-    speedX = -1;
-    speedY = 0;
-  } else if (e.code == "ArrowRight" && speedX != -1) {
-    //If Right arrow key pressed
-    speedX = 1;
-    speedY = 0;
+  if (gameOverScreenShowing == false) {
+    if (e.code == "ArrowUp" && speedY != 1) {
+      // If up arrow key pressed with this condition...
+      // snake will not move in the opposite direction
+      speedX = 0;
+      speedY = -1;
+    } else if (e.code == "ArrowDown" && speedY != -1) {
+      //If down arrow key pressed
+      speedX = 0;
+      speedY = 1;
+    } else if (e.code == "ArrowLeft" && speedX != 1) {
+      //If left arrow key pressed
+      speedX = -1;
+      speedY = 0;
+    } else if (e.code == "ArrowRight" && speedX != -1) {
+      //If Right arrow key pressed
+      speedX = 1;
+      speedY = 0;
+    }
   }
 }
 
@@ -40,6 +44,26 @@ const pkg = {
   name: langManager.getString("snake.name"),
   type: "app",
   privs: 0,
+  style: css`
+    .gameOverScreen {
+      font-family: Pixelify Sans, Inter, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+        "Open Sans", "Helvetica Neue", sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .gameOverScreen h1 {
+      font-size: 3rem;
+      color: #fff;
+    }
+
+    .gameOverScreen span {
+      font-size: 1.5em;
+    }
+  `,
   start: async function (Root) {
     // Testing
     console.log("Hello from example app", Root);
@@ -88,24 +112,53 @@ const pkg = {
 
     let gameOver = false;
 
+    let welcomeScreen = new Html("div")
+      .style({
+        background: "rgba(0,0,0,0.5)",
+        "backdrop-filter": "blur(5px)",
+        "--webkit-backdrop-filter": "blur(5px)",
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+      })
+      .appendMany(
+        new Html("h1").html(langManager.getString("snake.name")),
+        new Html("span").text(langManager.getString("snake.forPluto")),
+        new Html("h3").html(langManager.getString("snake.begin"))
+      )
+      .class("w-100", "h-100", "gameOverScreen")
+      .on("click", () => {
+        welcomeScreen.cleanup();
+        gameOverScreenShowing = false;
+      })
+      .appendTo(wrapper);
+
     function gameOverFunc() {
+      gameOverScreenShowing = true;
       let gameOverScreen = new Html("div")
         .style({
           background: "rgba(0,0,0,0.5)",
+          "backdrop-filter": "blur(5px)",
+          "--webkit-backdrop-filter": "blur(5px)",
+
           position: "absolute",
           top: 0,
           bottom: 0,
         })
         .appendMany(
-          new Html("h1").html("Game Over"),
-          new Html("h3").html("Click anywhere to continue.")
+          new Html("h1").html(langManager.getString("snake.gameOver")),
+          new Html("span").text(
+            langManager.getString("snake.score") + ": " + score
+          ),
+          new Html("h3").html(langManager.getString("snake.continue"))
         )
-        .class("w-100", "h-100")
+        .class("w-100", "h-100", "gameOverScreen")
         .on("click", () => {
           gameOverScreen.cleanup();
+          gameOverScreenShowing = false;
         })
         .appendTo(wrapper);
-      alert(score);
+
       score = 0;
     }
 
@@ -114,8 +167,8 @@ const pkg = {
     board.height = total_row * blockSize;
     board.width = total_col * blockSize;
     new Html(win.window).style({
-      height: board.height + 32 + "px",
-      width: board.width + "px",
+      height: board.height + 32 + 2 + "px",
+      width: board.width + 2 + "px",
     });
     context = board.getContext("2d");
 
@@ -140,6 +193,7 @@ const pkg = {
       context.fillRect(foodX, foodY, blockSize, blockSize);
 
       if (snakeX == foodX && snakeY == foodY) {
+        new Audio("/assets/pick.wav").play();
         snakeBody.push([foodX, foodY]);
         score = score + 1;
         placeFood();

@@ -77,5 +77,10 @@ export default {
   },
   snake: {
     name: "Snake",
+    forPluto: "for Pluto",
+    begin: "Click anywhere to start.",
+    continue: "Click anywhere to continue.",
+    gameOver: "Game Over",
+    score: "Score",
   },
 };

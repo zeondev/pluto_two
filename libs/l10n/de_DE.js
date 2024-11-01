@@ -83,5 +83,10 @@ export default {
   },
   snake: {
     name: "Schlange",
+    forPluto: "für Pluto",
+    begin: "Klicken Sie überall, um zu beginnen.",
+    continue: "Klicken Sie überall, um fortzufahren.",
+    gameOver: "Spiel vorbei",
+    score: "Punktzahl",
   },
 };

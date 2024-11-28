@@ -297,6 +297,98 @@ export default {
     }
 
     checkTheme();
+    let startMenuList = [
+      {
+        name: "Radio",
+        icon: "./assets/apps/Radio.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Radio", true, true);
+        },
+      },
+      {
+        name: "Assistant",
+        icon: "./assets/apps/Assistant.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Assistant", true, true);
+        },
+      },
+      {
+        name: "Store",
+        icon: "./assets/apps/Store.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Store", true, true);
+        },
+      },
+      {
+        name: "File Manager",
+        icon: "./assets/apps/FileManager.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:FileManager", true, true);
+        },
+      },
+      {
+        name: "Settings",
+        icon: "./assets/apps/Settings.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Settings", true, true);
+        },
+      },
+      {
+        name: "Weather",
+        icon: "./assets/apps/Weather.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Weather", true, true);
+        },
+      },
+      {
+        name: "Terminal",
+        icon: "./assets/apps/Terminal.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Terminal", true, true);
+        },
+      },
+      {
+        name: "Snake",
+        icon: "./assets/apps/Snake.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Snake", true, true);
+        },
+      },
+    ];
+
+    let startMenuApps = [];
+
+    startMenuList.forEach((app) => {
+      startMenuApps.push(
+        new Html("div")
+          .class("app")
+          .appendMany(
+            new Html("div").class("icon").style({
+              "background-image": "url(" + app.icon + ")",
+            }),
+            new Html("span").class("title").html(app.name)
+          )
+          .on("click", () => {
+            if (startMenu.elm.classList.contains("show")) {
+              startMenu.class(
+                "slideInCenteredFromBottom",
+                "slideOutCenteredFromBottom"
+              );
+              setTimeout(() => {
+                startMenu.class("hide", "show");
+              }, 300);
+            } else {
+              startMenu.class(
+                "hide",
+                "show",
+                "slideInCenteredFromBottom",
+                "slideOutCenteredFromBottom"
+              );
+            }
+            app.onClick();
+          })
+      );
+    });
 
     let startMenu = new Html("div")
       .appendTo(wrapper)
@@ -332,56 +424,7 @@ export default {
                 new Html("button").html(Icons.power)
               )
           ),
-        new Html("div").class("startMenuContent").appendMany(
-          new Html("div").class("app").appendMany(
-            new Html("div").class("icon").style({
-              "background-image": "url(./assets/apps/Radio.svg)",
-            }),
-            new Html("span").class("title").html("Radio")
-          ),
-          new Html("div").class("app").appendMany(
-            new Html("div").class("icon").style({
-              "background-image": "url(./assets/apps/Assistant.svg)",
-            }),
-            new Html("span").class("title").html("Assistant")
-          ),
-          new Html("div").class("app").appendMany(
-            new Html("div").class("icon").style({
-              "background-image": "url(./assets/apps/Store.svg)",
-            }),
-            new Html("span").class("title").html("Store")
-          ),
-          new Html("div").class("app").appendMany(
-            new Html("div").class("icon").style({
-              "background-image": "url(./assets/apps/FileManager.svg)",
-            }),
-            new Html("span").class("title").html("Files")
-          ),
-          new Html("div").class("app").appendMany(
-            new Html("div").class("icon").style({
-              "background-image": "url(./assets/apps/Settings.svg)",
-            }),
-            new Html("span").class("title").html("Settings")
-          ),
-          new Html("div").class("app").appendMany(
-            new Html("div").class("icon").style({
-              "background-image": "url(./assets/apps/Weather.svg)",
-            }),
-            new Html("span").class("title").html("Weather")
-          ),
-          new Html("div").class("app").appendMany(
-            new Html("div").class("icon").style({
-              "background-image": "url(./assets/apps/Terminal.svg)",
-            }),
-            new Html("span").class("title").html("Terminal")
-          ),
-          new Html("div").class("app").appendMany(
-            new Html("div").class("icon").style({
-              "background-image": "url(./assets/apps/Snake.svg)",
-            }),
-            new Html("span").class("title").html("Snake")
-          )
-        )
+        new Html("div").class("startMenuContent").appendMany(...startMenuApps)
       )
       .class("startMenu", "slideOutCenteredFromBottom", "hide");
 
@@ -396,35 +439,35 @@ export default {
         name: "Weather",
         icon: "./assets/apps/Weather.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:FileManager");
+          await Root.Core.Packages.Run("apps:FileManager", true, true);
         },
       },
       {
         name: "Browser",
         icon: "./assets/apps/Browser.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:FileManager");
+          await Root.Core.Packages.Run("apps:FileManager", true, true);
         },
       },
       {
         name: "Radio",
         icon: "./assets/apps/Radio.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:FileManager");
+          await Root.Core.Packages.Run("apps:FileManager", true, true);
         },
       },
       {
         name: "Snake",
         icon: "./assets/apps/Snake.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:Snake");
+          await Root.Core.Packages.Run("apps:Snake", true, true);
         },
       },
       {
         name: "File Manager",
         icon: "./assets/apps/FileManager.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:FileManager");
+          await Root.Core.Packages.Run("apps:FileManager", true, true);
         },
       },
     ];
@@ -488,7 +531,7 @@ export default {
         }
       });
     }
-    Root.Core.Packages.Run("apps:Snake");
+    Root.Core.Packages.Run("apps:Settings", true, true);
   },
   end: async function () {
     wrapper.cleanup();

@@ -14,7 +14,7 @@ const ctxMenu = CtxMenu;
 let win;
 
 const pkg = {
-  name: "Welcome",
+  name: "File Manager",
   type: "app",
   privs: 1,
   icon: "/assets/apps/FileManager.svg",

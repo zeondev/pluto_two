@@ -462,30 +462,35 @@ const Vfs = {
 
   // Function to write to a file at a given path
   async writeFile(path, contents, fsObject = this.fileSystem) {
-    const parts = path.split("/");
-    const filename = parts.pop();
-    let current = fsObject;
-    let metaData;
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
-      if (typeof current[part] === "undefined") {
-        return null;
+    try {
+      const parts = path.split("/");
+      const filename = parts.pop();
+      let current = fsObject;
+      let metaData;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (typeof current[part] === "undefined") {
+          return null;
+        }
+        metaData = current[part].metaData;
+        current = current[part].data;
       }
-      metaData = current[part].metaData;
-      current = current[part].data;
+      console.log(current);
+      console.log(current[filename]);
+      if (metaData.type !== FILE_TYPE.Folder) return null;
+      if (metaData.write === false) return null;
+      if (metaData.read === false) return null;
+      if (current[filename].metaData.type !== FILE_TYPE.File) return null;
+      if (current[filename].metaData.write === false) return null;
+      if (current[filename].metaData.read === false) return null;
+      current[filename].data = contents;
+      current[filename].metaData.modified = Date.now();
+      this.save();
+      return contents;
+    } catch (e) {
+      Vfs.createFile(path, fsObject);
+      Vfs.writeFile(path, contents, fsObject);
     }
-    console.log(current);
-    console.log(current[filename]);
-    if (metaData.type !== FILE_TYPE.Folder) return null;
-    if (metaData.write === false) return null;
-    if (metaData.read === false) return null;
-    if (current[filename].metaData.type !== FILE_TYPE.File) return null;
-    if (current[filename].metaData.write === false) return null;
-    if (current[filename].metaData.read === false) return null;
-    current[filename].data = contents;
-    current[filename].metaData.modified = Date.now();
-    this.save();
-    return contents;
   },
   // Function to create a new folder at a given path
   async createFolder(path, fsObject = this.fileSystem) {

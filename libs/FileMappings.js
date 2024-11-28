@@ -2,6 +2,8 @@ let L = {};
 let C = {};
 
 import Vfs from "./vfs.js";
+import Modal from "./modal.js";
+import langManager from "./l10n/manager.js";
 
 export default {
   name: "MIME File Mapping Library",
@@ -167,7 +169,7 @@ export default {
           icon: "help",
           fullName: `Desktop shortcut?`,
           onClick: (c) => {
-            L.Modal.alert("Oops", "Cannot open this file");
+            Modal.alert("Oops", "Cannot open this file");
           },
         };
       }
@@ -178,14 +180,14 @@ export default {
           icon: "help",
           fullName: `Desktop shortcut?`,
           onClick: (c) => {
-            L.Modal.alert("Oops", "Cannot open this file");
+            Modal.alert("Oops", "Cannot open this file");
           },
         };
       if (!shrtFile.name || !shrtFile.icon || !shrtFile.fullName) {
         return 0;
       }
       return {
-        name: L.getString(shrtFile.localizedName) ?? shrtFile.name,
+        name: langManager.getString(shrtFile.localizedName) ?? shrtFile.name,
         icon: shrtFile.icon,
         fullName: `Desktop shortcut (${shrtFile.fullName})`,
         onClick: (c) => {
@@ -206,7 +208,7 @@ export default {
           icon: "package",
           fullName: "Invalid App",
           onClick() {
-            L.Modal.alert("This app can not be launched");
+            Modal.alert("This app can not be launched");
           },
         };
       } else {
@@ -256,7 +258,7 @@ export default {
             fullName: "App Store App (unknown)",
             invalid: true,
             onClick() {
-              L.Modal.alert("This app can not be launched");
+              Modal.alert("This app can not be launched");
             },
           };
         }

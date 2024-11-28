@@ -83,4 +83,10 @@ export default {
     gameOver: "Game Over",
     score: "Score",
   },
+  terminal: {
+    name: "Terminal",
+  },
+  setting: {
+    name: "Settings",
+  },
 };

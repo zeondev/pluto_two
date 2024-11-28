@@ -89,4 +89,7 @@ export default {
     gameOver: "Spiel vorbei",
     score: "Punktzahl",
   },
+  terminal: {
+    name: "Terminal",
+  },
 };

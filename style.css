@@ -942,6 +942,28 @@ textarea::placeholder {
   background-color: transparent;
 }
 
+.text-sidebar {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: fit-content;
+  background-color: var(--unfocused);
+}
+
+.text-sidebar .sidebar-item {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.sidebar-item .sidebar-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
 @keyframes slide-up {
   0% {
     transform: translateY(50%) scale(0.85);

@@ -1,3 +1,10 @@
+//
+// Pluto Hydra Core
+// Made with ❤️
+// (c) 2024 Zeon.dev et al.
+// Licensed under the GNU Public License v3.0
+//
+
 "use strict";
 
 import compatibility from "./libs/compatibility.js";
@@ -98,6 +105,7 @@ let Packages = {
       Arguments: args,
       Core: privilegedApp == true ? Core : null,
       Packages: privilegedApp == true ? Packages : null,
+      Details,
       async End() {
         let result = await pkgData.end();
         if (result == true) Processes.remove(pid);
@@ -144,10 +152,19 @@ let Packages = {
   },
 };
 
+const Details = {
+  version: "v2.0.0",
+  codename: "Hydra",
+};
+
+Details.versionString = Details.version;
+Details.minSupported = `<=${Details.version}`;
+
 let Core = {
   Packages,
   Processes,
   Security,
+  Details,
 };
 
 windowSystem.init(Core);

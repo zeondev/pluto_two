@@ -19,5 +19,6 @@ export default {
     );
 
     sideBar.appendTo(wrapper);
+    return sideBar;
   },
 };

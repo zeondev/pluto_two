@@ -5,13 +5,14 @@ import Sidebar from "../../components/TextSidebar.js";
 import icons from "../../components/icons.js";
 import Modal from "../../libs/Modal.js";
 import FileMappings from "../../libs/FileMappings.js";
-import FileDialog from "../../libs/FileDialog.js";
 import langManager from "../../libs/l10n/manager.js";
+import DropDown from "../../components/DropDown.js";
+import ThemeLib from "../../libs/ThemeLib.js";
 
 let win;
 
 const pkg = {
-  name: langManager.getString("notepad.name"),
+  name: langManager.getString("settings.name"),
   type: "app",
   privs: 0,
   start: async function (Root) {
@@ -20,9 +21,9 @@ const pkg = {
 
     // Create a window
     win = new Ws.data.win({
-      title: langManager.getString("notepad.name"),
-      width: 312,
-      height: 248,
+      title: langManager.getString("settings.name"),
+      width: 500,
+      height: 400,
     });
 
     // let setTitle = (t) =>
@@ -36,141 +37,482 @@ const pkg = {
     let sidebarWrapper = new Html("div")
       .styleJs({ display: "flex" })
       .appendTo(wrapper);
-
-    let currentDocument = {
-      path: "",
-      dirty: false,
+    const defaultDesktopConfig = {
+      wallpaper: "./assets/wallpapers/space.png",
+      useThemeWallpaper: true,
+      theme: "dark.theme",
+      sidebarType: "vertical",
+      dockStyle: "full",
+      dockShowTray: true,
+      dockShowAssistant: true,
     };
 
-    const updateTitle = (_) =>
-      (win.window.querySelector(".win-titlebar .title").innerText = `${
-        currentDocument.dirty === true ? "•" : ""
-      } ${langManager.getString("notepad.name")} - ${
-        currentDocument.path === ""
-          ? "Untitled"
-          : currentDocument.path.split("/").pop()
-      }`.trim());
+    let desktopConfig = Object.assign(
+      defaultDesktopConfig,
+      JSON.parse(await Vfs.readFile("Root/Pluto/config/appearanceConfig.json"))
+    );
 
-    function newDocument(path, content) {
-      currentDocument.path = path;
-      currentDocument.dirty = false;
-      updateTitle();
-      // just to be sure (instead of using .text() as that was sometimes not working)
-      text.elm.textContent = content;
-      text.elm.scrollTop = 0;
-    }
-
-    // FileDialog.pickFile and FileDialog.saveFile both take path as an argument and are async
-    async function openFile() {
-      let file = await FileDialog.pickFile(
-        (await Vfs.getParentFolder(currentDocument.path)) || "Root"
+    async function save() {
+      await Vfs.writeFile(
+        "Root/Pluto/config/appearanceConfig.json",
+        JSON.stringify(desktopConfig)
       );
-      if (file === false) return;
-      let content = await Vfs.readFile(file);
-      newDocument(file, content);
-      win.focus();
-    }
-    async function saveFile() {
-      // make sure the path is not unreasonable
-      if (currentDocument.path === "") {
-        return saveAs();
-      }
-      await Vfs.writeFile(currentDocument.path, text.elm.value);
-      currentDocument.dirty = false;
-      updateTitle();
-    }
-    async function saveAs() {
-      let result = await FileDialog.saveFile(
-        (await Vfs.getParentFolder(currentDocument.path)) || "Root"
+      desktopConfig = Object.assign(
+        defaultDesktopConfig,
+        JSON.parse(
+          await Vfs.readFile("Root/Pluto/config/appearanceConfig.json")
+        )
       );
-      if (result === false) return false;
-      console.error(currentDocument, result);
-      await Vfs.createFile(result);
-      await Vfs.writeFile(result, text.elm.value);
-
-      currentDocument.dirty = false;
-      currentDocument.path = result;
-      updateTitle();
-    }
-
-    async function dirtyCheck() {
-      if (currentDocument.dirty === true) {
-        let result = await Root.Modal.prompt(
-          "Warning",
-          "You have unsaved changes, are you sure you want to proceed?",
-          win.window
-        );
-        if (result !== true) {
-          return false;
-        }
-      }
-      return true;
     }
 
     function makeSidebar() {
       sidebarWrapper.clear();
-      Sidebar.new(sidebarWrapper, [
+      let settingsSidebar = Sidebar.new(sidebarWrapper, [
         {
           onclick: async (_) => {
-            // clicking the new document button seems buggy, possibly due to dirty check
-            const result = await dirtyCheck();
-            if (result === false) return;
-            newDocument("", "");
+            pages.system();
           },
-          html: icons.newFile,
-          title: langManager.getString("notepad.newDocument"),
+          icon: icons.monitor,
+          text: langManager.getString("settings.system"),
         },
         {
           onclick: async (_) => {
-            const result = await dirtyCheck();
-            if (result === false) return;
-            openFile();
+            pages.accounts();
           },
-          html: icons.openFolder,
-          title: langManager.getString("notepad.openDocument"),
+          icon: icons.user,
+          text: langManager.getString("settings.accounts"),
         },
         {
           onclick: async (_) => {
-            await saveFile();
+            pages.appearence();
           },
-          html: icons.save,
-          title: langManager.getString("notepad.save"),
+          icon: icons.brush,
+          text: langManager.getString("settings.appearence"),
         },
         {
           onclick: async (_) => {
-            await saveAs();
+            pages.network();
           },
-          html: icons.saveAll,
-          title: langManager.getString("notepad.saveAs"),
+          icon: icons.wifiConnected,
+          text: langManager.getString("settings.network"),
         },
         {
-          style: {
-            "margin-top": "auto",
-          },
           onclick: (_) => {
-            alert("Not implemented");
+            pages.applications();
           },
-          html: icons.help,
-          title: langManager.getString("appHelp"),
+          icon: icons.package,
+          text: langManager.getString("settings.applications"),
+        },
+        {
+          onclick: (_) => {
+            pages.security();
+          },
+          icon: icons.shield,
+          text: langManager.getString("settings.security"),
         },
       ]);
+      new Html("button")
+        .class("sidebar-item", "m-0", "transparent", "small")
+        .appendMany(
+          new Html("div").class("pfp").html(icons.user),
+          new Html("div")
+            .class("sidebar-text", "small-label")
+            .style({
+              "text-align": "left",
+            })
+            .appendMany(
+              new Html("div").text("User").style({ color: "var(--text)" }),
+              new Html("div").text("Local Account")
+            )
+        )
+        .styleJs({ bottom: "5px", position: "absolute" })
+        // .on("click", (e) => {
+        //   b.onclick && b.onclick(e);
+        // })
+        // .style(b.style || {})
+        .appendTo(settingsSidebar);
     }
 
     const wrapperWrapper = new Html("div")
-      .class("col", "w-100", "ovh")
+      .class("col", "w-100", "ovh", "p-2")
       .appendTo(wrapper);
 
     new Html("h1").text("hi").appendTo(wrapperWrapper);
 
-    makeSidebar();
-
-    if (Root.Arguments.data) {
-      let content = await Vfs.readFile(Root.Arguments.data.path);
-      newDocument(Root.Arguments.data.path, content);
+    function makeHeading(type, text) {
+      if (type === "h1") {
+        new Html().class(type).text(text).appendTo(wrapperWrapper);
+      } else {
+        new Html()
+          .class(type, "mt-1", "mb-1")
+          .text(text)
+          .appendTo(wrapperWrapper);
+      }
+    }
+    function makeAlert(type, text) {
+      new Html().class("alert", type).text(text).appendTo(wrapperWrapper);
     }
 
+    let currentPage = "system";
+    let pages = {
+      system: async () => {
+        currentPage = "system";
+        wrapperWrapper.clear();
+        new Html("h1").text("System").appendTo(wrapperWrapper);
+
+        const sysInfo = Root.Details;
+
+        const cardBoxIcon = new Html("div")
+          .class("icon")
+          .style({ "--url": "url(./assets/pluto-logo.svg)" });
+        const cardBoxName = new Html("div").text(
+          `${langManager.getString("generic.pluto")}`
+        );
+        const cardBoxType = new Html("div")
+          .class("label")
+          .text(sysInfo.codename);
+
+        const cardBox = new Html("div")
+          .appendMany(
+            cardBoxIcon,
+            new Html("div").class("text").appendMany(cardBoxName, cardBoxType)
+          )
+          .class("card-box", "max")
+          .appendTo(wrapperWrapper);
+
+        makeHeading("h2", langManager.getString("settings.plutoInfo"));
+
+        let totalStorage = 0;
+
+        // if (navigator.userAgent.indexOf("pluto/") > -1) {
+        // Desktop electron app only code
+        // totalStorage = await Root.Core.host.du(Root.Core.host.dir);
+        // } else {
+        let allKeys = await localforage.keys();
+        for (let i = 0; i < allKeys.length; i++) {
+          let value = await localforage.getItem(allKeys[i]);
+
+          if (typeof value === "string") {
+            totalStorage += value.length;
+          } else if (value instanceof Blob) {
+            totalStorage += value.size;
+          }
+        }
+        // }
+
+        console.log(totalStorage);
+
+        let filesystemSize;
+
+        if (totalStorage < 1024) {
+          filesystemSize = totalStorage + " B";
+        } else if (totalStorage < 1024 * 1024) {
+          filesystemSize = (totalStorage / 1024).toFixed(2) + " KB";
+        } else if (totalStorage < 1024 * 1024 * 1024) {
+          filesystemSize = (totalStorage / 1024 / 1024).toFixed(1) + " MB";
+        } else {
+          filesystemSize =
+            (totalStorage / 1024 / 1024 / 1024).toFixed(1) + " GB";
+        }
+
+        const plutoDetails = new Html("div")
+          .class("card-box", "list", "max")
+          .appendMany(
+            // FS Capacity
+            new Html()
+              .class("item")
+              .appendMany(
+                new Html().text(langManager.getString("settings.storageUsed")),
+                new Html().class("label").text(filesystemSize)
+              ),
+            // Core Version
+            new Html().class("item").appendMany(
+              new Html().text(langManager.getString("settings.coreVersion")),
+              new Html().class("label").text(sysInfo.versionString)
+              // .on("click", increaseCoreCount)
+            ),
+            // Supported Versions
+            new Html()
+              .class("item")
+              .appendMany(
+                new Html().text(
+                  langManager.getString("settings.supportedVersions")
+                ),
+                new Html()
+                  .class("label")
+                  .text(sysInfo.minSupported.replace("<=", "≤"))
+              )
+          )
+          .appendTo(wrapperWrapper);
+
+        makeHeading("h2", langManager.getString("settings.yourDevice"));
+
+        // Get browser information
+        let browser = {
+          name: "",
+          version: "",
+        };
+
+        // Get operating system information
+        let os = {
+          name: "",
+          version: "",
+        };
+
+        let deviceType = "Unknown";
+        const webProtocol = location.protocol.endsWith("s:") ? "HTTPS" : "HTTP";
+        let webHost = location.host;
+
+        try {
+          // Get user agent string
+          const userAgent = navigator.userAgent;
+
+          if (webHost === "" && userAgent.includes("Electron")) {
+            webHost = "Local (Electron)";
+          } else if (webHost === "") {
+            webHost = "Local";
+          }
+
+          // Desktop app support
+          if (userAgent.indexOf("pluto") > -1) {
+            browser.name = "Pluto Desktop";
+            browser.version = userAgent.match(/pluto\/([\d.]+)/)[1];
+          } else if (userAgent.indexOf("Firefox") > -1) {
+            browser.name = "Firefox";
+            browser.version = userAgent.match(/Firefox\/([\d.]+)/)[1];
+          } else if (userAgent.indexOf("Chrome") > -1) {
+            browser.name = "Chrome";
+            browser.version = userAgent.match(/Chrome\/([\d.]+)/)[1];
+          } else if (userAgent.indexOf("Safari") > -1) {
+            browser.name = "Safari";
+            browser.version = userAgent.match(/Version\/([\d.]+)/)[1];
+          } else if (userAgent.indexOf("Opera") > -1) {
+            browser.name = "Opera";
+            browser.version = userAgent.match(/Opera\/([\d.]+)/)[1];
+          } else if (userAgent.indexOf("Edge") > -1) {
+            browser.name = "Microsoft Edge";
+            browser.version = userAgent.match(/Edge\/([\d.]+)/)[1];
+          } else {
+            browser.name = "Other";
+            browser.version = "";
+          }
+
+          browser.version = parseFloat(browser.version);
+          if (isNaN(browser.version)) browser.version = "";
+
+          if (userAgent.indexOf("Windows") > -1) {
+            os.name = "Windows";
+            os.version = userAgent.match(/Windows NT ([\d.]+)/)[1];
+          } else if (userAgent.indexOf("Mac") > -1) {
+            os.name = "macOS";
+            os.version = userAgent
+              .match(/Mac OS X ([\d_.]+)/)[1]
+              .replace(/_/g, ".");
+          } else if (userAgent.indexOf("Android") > -1) {
+            os.name = "Android";
+            os.version = userAgent.match(/Android ([\d.]+)/)[1];
+          } else if (userAgent.indexOf("Linux") > -1) {
+            os.name = "Linux";
+          } else if (userAgent.indexOf("iOS") > -1) {
+            os.name = "iOS";
+            os.version = userAgent.match(/OS ([\d_]+)/)[1].replace(/_/g, ".");
+          } else {
+            os.name = "Other";
+            os.version = "";
+          }
+
+          os.version = parseFloat(os.version);
+
+          if (os.name === "macOS" && os.version === "10.15") {
+            os.version = "X";
+          }
+
+          if (isNaN(os.version)) os.version = "";
+
+          // Get device type
+          const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
+          deviceType = isMobile ? "Mobile" : "Desktop";
+        } catch (e) {
+          browser = Object.assign({ name: "Other", version: 0 }, browser);
+          os = Object.assign({ name: "Unknown", version: 0 }, os);
+        }
+        const yourDevice = new Html("div")
+          .class("card-box", "list", "max")
+          .appendMany(
+            // OS
+            new Html()
+              .class("item")
+              .appendMany(
+                new Html().text(
+                  langManager.getString("settings.operatingSystem")
+                ),
+                new Html()
+                  .class("label")
+                  .text((os.name + " " + os.version).trim())
+              ),
+            // Browser
+            new Html()
+              .class("item")
+              .appendMany(
+                new Html().text(langManager.getString("settings.webBrowser")),
+                new Html()
+                  .class("label")
+                  .text((browser.name + " " + browser.version).trim())
+              ),
+            // Device type
+            new Html()
+              .class("item")
+              .appendMany(
+                new Html().text(langManager.getString("settings.deviceType")),
+                new Html().class("label").text(deviceType)
+              ),
+            // Protocol
+            new Html()
+              .class("item")
+              .appendMany(
+                new Html().text(langManager.getString("settings.webProtocol")),
+                new Html().class("label").text(webProtocol)
+              ),
+            // Host
+            new Html()
+              .class("item")
+              .appendMany(
+                new Html().text(langManager.getString("settings.webHost")),
+                new Html().class("label").text(webHost)
+              )
+          )
+          .appendTo(wrapperWrapper);
+      },
+      accounts: () => {
+        currentPage = "accounts";
+        wrapperWrapper.clear();
+        new Html("h1").text("Accounts").appendTo(wrapperWrapper);
+      },
+      appearence: async () => {
+        currentPage = "appearence";
+        wrapperWrapper.clear();
+        const defaultThemes = [
+          new Html("option").text("Dark").attr({
+            value: "dark",
+            selected: desktopConfig.theme === "dark" ? true : null,
+          }),
+          new Html("option").text("Light").attr({
+            value: "light",
+            selected: desktopConfig.theme === "light" ? true : null,
+          }),
+        ];
+        new Html("h1").text("Appearence").appendTo(wrapperWrapper);
+        let themeSelectSpan = new Html("span")
+          .text("Theme")
+          .appendTo(wrapperWrapper);
+
+        const check = await Vfs.whatIs("Root/Pluto/config/themes");
+
+        let themes = [];
+        let themeData = {};
+
+        let selectedTheme = "dark.theme";
+
+        if (check === null) {
+          // non exist
+          themes = defaultThemes;
+        } else {
+          const themeFileListReal = await Vfs.list("Root/Pluto/config/themes");
+          const themeFileList = themeFileListReal
+            .filter((r) => r.type === "File" && r.item.endsWith(".theme"))
+            .map((r) => r.item);
+
+          await Promise.all(
+            themeFileList.map(async (itm) => {
+              const theme = await Vfs.readFile(
+                `Root/Pluto/config/themes/${itm}`
+              );
+              const result = ThemeLib.validateTheme(theme);
+              if (result.success === true) {
+                themes.push({
+                  id: itm,
+                  item: result.data.name,
+                });
+                if (desktopConfig.theme === itm) {
+                  selectedTheme = itm;
+                }
+                themeData[itm] = Object.assign({ fileName: itm }, result.data);
+              } else {
+                alert("failed parsing theme data due to " + result.message);
+              }
+            })
+          );
+        }
+
+        console.log(selectedTheme);
+
+        DropDown.new(
+          themeSelectSpan,
+          themes,
+          (e) => {
+            // set the option and do the save
+            if (e === undefined) {
+              return;
+            }
+
+            desktopConfig.theme = e;
+            ThemeLib.setCurrentTheme(themeData[e]);
+            save();
+          },
+          selectedTheme
+        ).class("if", "mc");
+
+        const languageSelectSpan = new Html("span")
+          // .class("row", "ac", "js", "gap")
+          .text(langManager.getString("settings.language"))
+          .appendTo(wrapperWrapper);
+
+        DropDown.new(
+          languageSelectSpan,
+          langManager.langs.map((l) => {
+            // return new Html("button")
+            //   .text(langManager.getString("languages." + l))
+            //   .on("click", () => {
+            //     langManager.setLanguage(l);
+            //   });
+            return {
+              item: langManager.getString("languages." + l),
+              id: l,
+              selected: desktopConfig.language === l ? true : false,
+            };
+          }),
+          (e) => {
+            desktopConfig.language = e;
+            alert(e);
+            langManager.setLanguage(e);
+            save();
+          },
+          desktopConfig.language,
+          "unset"
+        ).class("if", "mc");
+      },
+      network: () => {
+        currentPage = "network";
+        wrapperWrapper.clear();
+        new Html("h1").text("Network").appendTo(wrapperWrapper);
+      },
+      applications: () => {
+        currentPage = "applications";
+        wrapperWrapper.clear();
+        new Html("h1").text("Applications").appendTo(wrapperWrapper);
+      },
+      security: () => {
+        currentPage = "security";
+        wrapperWrapper.clear();
+        new Html("h1").text("Security").appendTo(wrapperWrapper);
+      },
+    };
+
+    makeSidebar();
+    pages.system();
     document.addEventListener("pluto.lang-change", (e) => {
-      win.setTitle(langManager.getString("notepad.name"));
+      pages[currentPage]();
+      win.setTitle(langManager.getString("settings.name"));
       makeSidebar();
     });
   },

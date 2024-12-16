@@ -3,6 +3,10 @@ export default {
     en_US: "English (United States)",
     de_DE: "German (Germany)",
   },
+  generic: {
+    // get current local os from user agant
+    pluto: "Pluto",
+  },
   actions: {
     ok: "OK",
     yes: "Yes",
@@ -86,7 +90,25 @@ export default {
   terminal: {
     name: "Terminal",
   },
-  setting: {
+  settings: {
     name: "Settings",
+    system: "System",
+    accounts: "Accounts",
+    appearence: "Appearence",
+    network: "Network",
+    applications: "Applications",
+    security: "Security",
+    language: "Language",
+    thisSystem: "This system",
+    yourDevice: "Your device",
+    operatingSystem: "Operating system",
+    webBrowser: "Web browser",
+    deviceType: "Device type",
+    webProtocol: "Web protocol",
+    webHost: "Web host",
+    plutoInfo: "Pluto Information",
+    storageUsed: "Storage used",
+    coreVersion: "Core version",
+    supportedVersions: "Supported versions",
   },
 };

@@ -26,6 +26,8 @@ let Security = {
   },
 };
 
+let RegisteredApps = new Map();
+
 let Processes = {
   list: new Map(),
   add: (pid, process) => {
@@ -57,6 +59,12 @@ let Packages = {
     const pkg = await import(url);
     const pkgData = pkg.default;
     let privilegedApp = false;
+
+    RegisteredApps.set(pkgData.name, {
+      name: pkgData.name,
+      url,
+      privs: pkgData.privs,
+    });
 
     if (!pkgData || typeof pkgData !== "object") return false;
     if (!pkgData.start || typeof pkgData.start !== "function") return false;
@@ -105,6 +113,7 @@ let Packages = {
       Arguments: args,
       Core: privilegedApp == true ? Core : null,
       Packages: privilegedApp == true ? Packages : null,
+      RegisteredApps: privilegedApp == true ? RegisteredApps : null,
       Details,
       async End() {
         let result = await pkgData.end();
@@ -170,6 +179,7 @@ let Core = {
 windowSystem.init(Core);
 
 window.Core = Core;
+window.RegisteredApps = RegisteredApps;
 
 window.compatibility = compatibility;
 

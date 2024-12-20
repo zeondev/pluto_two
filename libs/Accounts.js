@@ -1,5 +1,5 @@
 async function login(u, p) {
-  return await fetch("https://zeon.dev/api/public/login", {
+  let fet = await fetch("https://zeon.dev/api/public/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -27,6 +27,8 @@ async function login(u, p) {
       // Handle any errors that occur during the request
       console.error("the error occurred", error);
     });
+  await checkUserData();
+  return fet;
 }
 
 function logout() {

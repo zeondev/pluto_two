@@ -8,13 +8,16 @@ import FileMappings from "../../libs/FileMappings.js";
 import langManager from "../../libs/l10n/manager.js";
 import DropDown from "../../components/DropDown.js";
 import ThemeLib from "../../libs/ThemeLib.js";
+import Accounts from "../../libs/Accounts.js";
+import CodeScanner from "../../libs/CodeScanner.js";
+let userData = Accounts.getUserData();
 
 let win;
 
 const pkg = {
   name: langManager.getString("settings.name"),
   type: "app",
-  privs: 0,
+  privs: 1,
   start: async function (Root) {
     // Testing
     console.log("Hello from example app", Root);
@@ -111,26 +114,59 @@ const pkg = {
           text: langManager.getString("settings.security"),
         },
       ]);
-      new Html("button")
-        .class("sidebar-item", "m-0", "transparent", "small")
-        .appendMany(
-          new Html("div").class("pfp").html(icons.user),
-          new Html("div")
-            .class("sidebar-text", "small-label")
-            .style({
-              "text-align": "left",
-            })
-            .appendMany(
-              new Html("div").text("User").style({ color: "var(--text)" }),
-              new Html("div").text("Local Account")
-            )
-        )
-        .styleJs({ bottom: "5px", position: "absolute" })
-        // .on("click", (e) => {
-        //   b.onclick && b.onclick(e);
-        // })
-        // .style(b.style || {})
-        .appendTo(settingsSidebar);
+
+      let userData = Accounts.getUserData();
+      if (userData.onlineAccount == 0) {
+        new Html("button")
+          .class("sidebar-item", "m-0", "transparent", "small")
+          .appendMany(
+            new Html("div").class("pfp").html(icons.user),
+            new Html("div")
+              .class("sidebar-text", "small-label")
+              .style({
+                "text-align": "left",
+              })
+              .appendMany(
+                new Html("div").text("User").style({ color: "var(--text)" }),
+                new Html("div").text("Offline Account")
+              )
+          )
+          .styleJs({ bottom: "5px", position: "absolute" })
+          // .on("click", (e) => {
+          //   b.onclick && b.onclick(e);
+          // })
+          // .style(b.style || {})
+          .appendTo(settingsSidebar);
+      } else {
+        new Html("button")
+          .class("sidebar-item", "m-0", "transparent", "small")
+          .appendMany(
+            new Html("div")
+              .class("pfp")
+              .appendMany(
+                new Html("img")
+                  .attr({ src: userData.pfp })
+                  .style({ width: "25px", "border-radius": "50%" })
+              ),
+            new Html("div")
+              .class("sidebar-text", "small-label")
+              .style({
+                "text-align": "left",
+              })
+              .appendMany(
+                new Html("div")
+                  .text(userData.username)
+                  .style({ color: "var(--text)" }),
+                new Html("div").text("Online Account")
+              )
+          )
+          .styleJs({ bottom: "5px", position: "absolute" })
+          // .on("click", (e) => {
+          //   b.onclick && b.onclick(e);
+          // })
+          // .style(b.style || {})
+          .appendTo(settingsSidebar);
+      }
     }
 
     const wrapperWrapper = new Html("div")
@@ -386,7 +422,94 @@ const pkg = {
       accounts: () => {
         currentPage = "accounts";
         wrapperWrapper.clear();
+        makeSidebar();
         new Html("h1").text("Accounts").appendTo(wrapperWrapper);
+        let userData = Accounts.getUserData();
+        if (userData.onlineAccount == 0) {
+          const loginCardBox = new Html("div")
+            .appendMany(
+              new Html("img").class("icon").attr({ src: userData.pfp }),
+              new Html("div")
+                .class("text")
+                .appendMany(
+                  new Html("div").text("User"),
+                  new Html("div").class("label").text("Offline Account")
+                )
+            )
+            .class("card-box", "max")
+            .appendTo(wrapperWrapper);
+          new Html("button")
+            .text("Login with Zeon")
+            .class("primary", "mc", "m-2")
+            .on("click", async () => {
+              let x = await Modal.input(
+                "Zeon Login",
+                "Please enter your Zeon username",
+                "Username...",
+                wrapperWrapper,
+                false
+              );
+              if (x !== false) {
+                let y = await Modal.input(
+                  "Zeon Login",
+                  "Please enter your Zeon password",
+                  "Password...",
+                  wrapperWrapper,
+                  true
+                );
+                if (y !== false) {
+                  Accounts.login(x, y).then(async (e) => {
+                    console.log(e);
+                    console.log(await Accounts.getUserData());
+                    pages.accounts();
+                  });
+                }
+              }
+            })
+            .appendTo(wrapperWrapper);
+        } else {
+          const loginCardBox = new Html("div")
+            .appendMany(
+              new Html("img").class("icon").attr({ src: userData.pfp }),
+              new Html("div")
+                .class("text")
+                .appendMany(
+                  new Html("div").text(userData.username),
+                  new Html("div").class("label").text("Online Account")
+                )
+            )
+            .class("card-box", "max")
+            .appendTo(wrapperWrapper);
+          makeHeading("h2", "Details");
+          const detailsCardBox = new Html("div")
+            .appendMany(
+              new Html("div")
+                .class("text")
+                .appendMany(
+                  new Html("div").class("label").text("Email"),
+                  new Html("div").text(userData.email),
+                  new Html("div").class("label").text("Account Type"),
+                  new Html("div").text("Online Account"),
+                  new Html("div").class("label").text("Account ID"),
+                  new Html("div").text(userData.id)
+                )
+            )
+            .class("card-box", "mc")
+            .appendTo(wrapperWrapper);
+          makeHeading("h2", "Options");
+          const optionsCardBox = new Html("div")
+            .appendMany(
+              new Html("button")
+                .class("mc", "small")
+                .text("Logout")
+                .on("click", async () => {
+                  await Accounts.logout();
+                  pages.accounts();
+                })
+            )
+            .class("card-box", "mc")
+            .appendTo(wrapperWrapper);
+        }
       },
       appearence: async () => {
         currentPage = "appearence";
@@ -496,20 +619,164 @@ const pkg = {
         wrapperWrapper.clear();
         new Html("h1").text("Network").appendTo(wrapperWrapper);
       },
-      applications: () => {
+      applications: async () => {
         currentPage = "applications";
         wrapperWrapper.clear();
         new Html("h1").text("Applications").appendTo(wrapperWrapper);
+        makeHeading("h2", "Registered Packages");
+        const cardBox = new Html("div")
+          .class("card-box", "list", "mc")
+          .appendMany(
+            new Html("div").class("item").text("Registered Packages"),
+            new Html("div")
+              .class("label")
+              .text(Root.RegisteredApps.size + " packages")
+          )
+          .appendTo(wrapperWrapper);
+
+        Root.RegisteredApps.forEach((app) => {
+          new Html("div")
+            .class("item")
+            .appendMany(
+              new Html("div").text(app.name),
+              new Html("div").class("label").text(app.url)
+            )
+            .appendTo(cardBox);
+        });
+        makeHeading("h2", "Local Applications");
+        const localApps = new Html("div")
+          .class("card-box", "list", "mc")
+          .appendMany(
+            new Html("div").class("item").text("Local Applications"),
+            new Html("div")
+              .class("label")
+              .text(
+                (await Vfs.list("Root/Pluto/apps")).filter((app) =>
+                  String(app.item).endsWith(".app")
+                ).length + " applications"
+              )
+          )
+          .appendTo(wrapperWrapper);
+
+        const appList = (await Vfs.list("Root/Pluto/apps"))
+          .filter((app) => String(app.item).endsWith(".app"))
+          .forEach((app) => {
+            new Html("div")
+              .class("item")
+              .appendMany(
+                new Html("div").text(app.item),
+                new Html("div").class("label").text(app.type)
+              )
+              .appendTo(localApps);
+          });
       },
-      security: () => {
-        currentPage = "security";
+      security: async () => {
+        async function performSecurityScan() {
+          let dc = await CodeScanner.scanForDangerousCode();
+          table.clear();
+
+          new Html("thead")
+            .appendMany(
+              new Html("tr").appendMany(
+                new Html("th").text(
+                  langManager.getString("settings.securityTableItemName")
+                ),
+                new Html("th").text(
+                  langManager.getString("settings.securityTableItemSafe")
+                ),
+                new Html("th").text(
+                  langManager.getString("settings.securityTableItemDelete")
+                )
+              )
+            )
+            .appendTo(table);
+
+          console.log(dc, dc.length, 0 < dc.length, 1 < dc.length);
+
+          for (let i = 0; i < dc.length; i++) {
+            if (dc[i].success) {
+              new Html("tbody")
+                .appendMany(
+                  new Html("tr").appendMany(
+                    new Html("td").text(dc[i].filename),
+                    new Html("td").text(
+                      dc[i].dangerous === true
+                        ? langManager.getString("actions.no")
+                        : langManager.getString("actions.yes")
+                    ),
+                    new Html("td").appendMany(
+                      dc[i].dangerous === true
+                        ? new Html("button")
+                            .text(langManager.getString("Filesystem.delete"))
+                            .on("click", async (_) => {
+                              await dc[i].delete();
+                              await performSecurityScan();
+                            })
+                        : new Html("button")
+                            .attr({ disabled: true })
+                            .text(langManager.getString("Filesystem.delete"))
+                    )
+                  )
+                )
+                .appendTo(table);
+            }
+          }
+        }
+        // await this.clear("security");
         wrapperWrapper.clear();
-        new Html("h1").text("Security").appendTo(wrapperWrapper);
+        // makeAlert("warning", "This section is currently not finished.");
+        makeHeading("h1", langManager.getString("settings.security"));
+        let table = new Html("table")
+          .class("w-100")
+          .appendMany()
+          .appendTo(wrapperWrapper);
+        new Html("button")
+          .text(langManager.getString("settings.securityCheck"))
+          .class("primary", "mc", "small")
+          .on("click", async (_) => performSecurityScan())
+          .appendTo(wrapperWrapper);
+
+        let settingsConfig = JSON.parse(
+          await Vfs.readFile("Root/Pluto/config/settingsConfig.json")
+        );
+        console.log(settingsConfig);
+        if (settingsConfig === null) {
+          await Vfs.writeFile(
+            "Root/Pluto/config/settingsConfig.json",
+            `{"warnSecurityIssues": true}`
+          );
+          settingsConfig = JSON.parse(
+            await Vfs.readFile("Root/Pluto/config/settingsConfig.json")
+          );
+        }
+
+        new Html("span")
+          .appendMany(
+            new Html("input")
+              .attr({
+                type: "checkbox",
+                id: Root.PID + "lc",
+                checked: settingsConfig.warnSecurityIssues,
+              })
+              .on("input", async (e) => {
+                settingsConfig.warnSecurityIssues = e.target.checked;
+                await Vfs.writeFile(
+                  "Root/Pluto/config/settingsConfig.json",
+                  JSON.stringify(settingsConfig)
+                );
+              }),
+            new Html("label")
+              .attr({
+                for: Root.PID + "lc",
+              })
+              .text(langManager.getString("settings.securityCheckEveryStartup"))
+          )
+          .appendTo(wrapperWrapper);
       },
     };
 
     makeSidebar();
-    pages.system();
+    pages.accounts();
     document.addEventListener("pluto.lang-change", (e) => {
       pages[currentPage]();
       win.setTitle(langManager.getString("settings.name"));

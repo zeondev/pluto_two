@@ -13,25 +13,22 @@ body {
   -moz-user-select: none;
   -webkit-user-select: none;
   color-scheme: dark;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 14px;
-
-
-
-
-
 }
 
-*:not(.resize-grips,
-  .resize-grip,
-  input,
-  textarea,
-  button,
-  button *,
-  select,
-  select *,
-  a) {
+*:not(
+    .resize-grips,
+    .resize-grip,
+    input,
+    textarea,
+    button,
+    button *,
+    select,
+    select *,
+    a
+  ) {
   cursor: var(--cursor-default) 2 2, auto !important;
 }
 
@@ -176,51 +173,63 @@ textarea,
 }
 
 .slideInFromLeft {
-  animation: slideInFromLeft var(--animation-duration) var(--easing-function) forwards;
+  animation: slideInFromLeft var(--animation-duration) var(--easing-function)
+    forwards;
 }
 
 .slideInFromRight {
-  animation: slideInFromRight var(--animation-duration) var(--easing-function) forwards;
+  animation: slideInFromRight var(--animation-duration) var(--easing-function)
+    forwards;
 }
 
 .shortSlideInFromLeft {
-  animation: slideInFromLeft var(--short-animation-duration) var(--easing-function) forwards;
+  animation: slideInFromLeft var(--short-animation-duration)
+    var(--easing-function) forwards;
 }
 
 .shortSlideInFromRight {
-  animation: slideInFromRight var(--short-animation-duration) var(--easing-function) forwards;
+  animation: slideInFromRight var(--short-animation-duration)
+    var(--easing-function) forwards;
 }
 
 .slideInFromBottom {
-  animation: slideInFromBottom var(--animation-duration) var(--easing-function) forwards;
+  animation: slideInFromBottom var(--animation-duration) var(--easing-function)
+    forwards;
 }
 
 .slideInFromTop {
-  animation: slideInFromTop var(--animation-duration) var(--easing-function) forwards;
+  animation: slideInFromTop var(--animation-duration) var(--easing-function)
+    forwards;
 }
 
 .slideInCenteredFromBottom {
-  animation: slideInCenteredFromBottom var(--animation-duration) var(--easing-function) forwards;
+  animation: slideInCenteredFromBottom var(--animation-duration)
+    var(--easing-function) forwards;
 }
 
 .slideInCenteredFromTop {
-  animation: slideInCenteredFromTop var(--animation-duration) var(--easing-function) forwards;
+  animation: slideInCenteredFromTop var(--animation-duration)
+    var(--easing-function) forwards;
 }
 
 .slideOutCenteredFromBottom {
-  animation: slideOutCenteredFromBottom var(--animation-duration) var(--easing-function) forwards;
+  animation: slideOutCenteredFromBottom var(--animation-duration)
+    var(--easing-function) forwards;
 }
 
 .slideOutCenteredFromTop {
-  animation: slideOutCenteredFromTop var(--animation-duration) var(--easing-function) forwards;
+  animation: slideOutCenteredFromTop var(--animation-duration)
+    var(--easing-function) forwards;
 }
 
 .shortSlideInFromBottom {
-  animation: slideInFromBottom var(--short-animation-duration) var(--easing-function) forwards;
+  animation: slideInFromBottom var(--short-animation-duration)
+    var(--easing-function) forwards;
 }
 
 .shortSlideInFromTop {
-  animation: slideInFromTop var(--short-animation-duration) var(--easing-function) forwards;
+  animation: slideInFromTop var(--short-animation-duration)
+    var(--easing-function) forwards;
 }
 
 @keyframes slideInFromLeft {
@@ -434,7 +443,8 @@ iframe {
 }
 
 .win-window.closing {
-  animation: slide-down var(--animation-duration) var(--easing-function) forwards;
+  animation: slide-down var(--animation-duration) var(--easing-function)
+    forwards;
 }
 
 .win-window.dragging {
@@ -474,11 +484,11 @@ iframe {
   box-shadow: none;
 }
 
-.win-window.max>.win-titlebar>.buttons>.win-btn.win-minimize {
+.win-window.max > .win-titlebar > .buttons > .win-btn.win-minimize {
   visibility: collapse;
 }
 
-.desktop~.win-window.max {
+.desktop ~ .win-window.max {
   height: calc(100% - 42px - 12px) !important;
 }
 
@@ -1068,7 +1078,6 @@ textarea::placeholder {
   cursor: var(--cursor-not-allowed) 10 10, not-allowed !important;
 }
 
-
 .row {
   display: flex;
   flex-direction: row;
@@ -1181,7 +1190,8 @@ p {
 }
 
 .modal.closing .modal-content {
-  animation: shortSlideDown var(--animation-duration) var(--easing-function) forwards;
+  animation: shortSlideDown var(--animation-duration) var(--easing-function)
+    forwards;
 }
 
 .modal-content {
@@ -1227,12 +1237,12 @@ p {
   overflow: auto;
 }
 
-.modal-body> :first-child {
+.modal-body > :first-child {
   flex: 1;
   white-space: pre-wrap;
 }
 
-.modal-body> :first-child table {
+.modal-body > :first-child table {
   white-space: normal;
 }
 
@@ -1250,7 +1260,7 @@ table {
   border-spacing: 0;
 }
 
-table>tbody>tr>td div {
+table > tbody > tr > td div {
   width: 24px;
   display: flex;
   justify-content: center;
@@ -1373,7 +1383,6 @@ td {
   transition-timing-function: var(--easing-function);
 }
 
-
 *:empty {
   transition-property: background-color, color, border-color;
   transition-duration: 0.5s;
@@ -1459,6 +1468,9 @@ hr {
   background-color: var(--unfocused);
   border-radius: 8px;
   border: 1px solid var(--outline);
+}
+.bold {
+  font-weight: bold;
 }
 
 .h1,

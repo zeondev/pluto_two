@@ -209,7 +209,7 @@ const pkg = {
     let wrapper = win.window.querySelector(".win-content");
     wrapper.classList.add("o-h", "col", "h-100", "w-100");
 
-    let currentWeatherFetch = await fetch("https://wttr.in/berlin?format=j1");
+    let currentWeatherFetch = await fetch("https://wttr.in/?format=j1");
     let currentWeather = await currentWeatherFetch.json();
 
     new Html("h2")

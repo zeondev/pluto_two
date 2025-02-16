@@ -18,24 +18,39 @@ const pkg = {
   start: async function (Root) {
     console.log(Ws.data);
 
-    const appName = "Notepad ⫔";
-    win = new Ws.data.win({
-      title: appName,
-      icon: "/assets/pluto-logo.svg",
-      width: 400,
-      height: 400,
-    });
+    if (Root.Arguments) {
+      const word = Root.Arguments;
 
-    let wrapper = win.window.querySelector(".win-content");
-    wrapper.classList.add("with-sidebar", "o-h", "row", "h-100");
+      const firstLetter = word.charAt(0);
 
-    wrapper.append(
-      compatibility.start(
-        await fetch("/compatibility/pkgs/apps/Notepad.js").then(async (a) => {
-          return await a.text();
-        })
-      )
-    );
+      const firstLetterCap = firstLetter.toUpperCase();
+
+      const remainingLetters = word.slice(1);
+
+      const capitalizedWord = firstLetterCap + remainingLetters;
+      const appName = capitalizedWord + " ⫔";
+      win = new Ws.data.win({
+        title: appName,
+        icon: "/assets/pluto-logo.svg",
+        width: 400,
+        height: 400,
+      });
+
+      let wrapper = win.window.querySelector(".win-content");
+      wrapper.classList.add("with-sidebar", "o-h", "row", "h-100");
+
+      wrapper.append(
+        compatibility.start(
+          await fetch(
+            "/compatibility/pkgs/apps/" + capitalizedWord + ".js"
+          ).then(async (a) => {
+            return await a.text();
+          })
+        )
+      );
+    } else {
+      Root.End();
+    }
   },
   end: async function () {
     // Close the window when the process is exited

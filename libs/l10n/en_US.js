@@ -148,4 +148,7 @@ export default {
   browser: {
     name: "Browser",
   },
+  music: {
+    name: "Music",
+  },
 };

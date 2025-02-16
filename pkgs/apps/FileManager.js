@@ -8,6 +8,20 @@ import Modal from "../../libs/Modal.js";
 import FileMappings from "../../libs/FileMappings.js";
 import { css } from "../../libs/templates.js";
 import CtxMenu from "../../libs/CtxMenu.js";
+import langManager from "../../libs/l10n/manager.js";
+
+
+function makeid(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
 
 const ctxMenu = CtxMenu;
 
@@ -173,7 +187,7 @@ const pkg = {
                     type: file.type,
                   });
 
-                  const filePath = `${Root.Lib.randomString()}-${file.name}`;
+                  const filePath = `${makeid(5)}-${file.name}`;
 
                   await localforage.setItem(filePath, blob);
 
@@ -194,7 +208,7 @@ const pkg = {
                 reader.onload = async (readerEvent) => {
                   var content = readerEvent.target.result; // this is the content!
 
-                  const filePath = `${Root.Lib.randomString()}-${file.name}`;
+                  const filePath = `${makeid(5)}-${file.name}`;
 
                   await localforage.setItem(filePath, content);
 
@@ -323,19 +337,18 @@ const pkg = {
             },
             mapping.ctxMenuApp !== undefined
               ? {
-                  item: `Open in ${Root.Lib.getString(
+                  item: `Open in ${langManager.getString(
                     mapping.ctxMenuApp.name
                   )}`,
                   async select() {
-                    const p = await Root.Core.startPkg(
+                    const p = await Root.Packages.Run(
                       mapping.ctxMenuApp.launch,
-                      true,
+                      {
+                        type: "loadFile",
+                        path: path + "/" + file.item,
+                      },
                       true
                     );
-                    p.proc.send({
-                      type: "loadFile",
-                      path: path + "/" + file.item,
-                    });
                   },
                 }
               : null,

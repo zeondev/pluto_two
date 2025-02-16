@@ -531,7 +531,7 @@ export default {
         }
       });
     }
-    Root.Core.Packages.Run("apps:Browser", true, true);
+    Root.Core.Packages.Run("apps:DevEnv", true, true);
   },
   end: async function () {
     wrapper.cleanup();

@@ -91,6 +91,9 @@ export default {
   terminal: {
     name: "Terminal",
   },
+  example: {
+    name: "Example"
+  },
   settings: {
     name: "Settings",
     system: "System",
@@ -147,5 +150,48 @@ export default {
   },
   browser: {
     name: "Browser",
+  },
+  devenv: {
+    name: "DevEnv",
+    systemApp_DevEnv: "DevEnv",
+    systemApp_Terminal: "Terminal",
+    systemApp_Settings: "Settings",
+    action_zoomOut: "Zoom Out",
+    action_runApp: "Run App",
+    action_zoomIn: "Zoom In",
+    action_format: "Prettify",
+    action_runApp: "Run App",
+    action_aceSettings: "Ace Editor Settings",
+    action_showAutocomplete: "Show Autocomplete",
+    appHelp_string1:
+      "Welcome to DevEnv. This is a developer environment for developing Pluto apps.",
+    appHelp_string2:
+      "You can use the buttons on the sidebar to perform different actions in the app.\nThere is also a set of keyboard shortcuts.",
+    appHelp_string3: "Would you like to learn about the keyboard shortcuts?",
+    appHelp_string4: "Here are the keyboard shortcuts:",
+    settings_wordWrap: "Word wrap",
+    settings_fontSize: "Font size",
+    settings_templateApp: "Startup with example app",
+    settings_prettifyOnSave: "Format code on save",
+    settings_liveAutocomplete: "Autocomplete while typing",
+    settings_useMenuBar: "Enable the new menu bar",
+    menuFile: "File",
+    menuEdit: "Edit",
+    menuView: "View",
+    menuExtensions: "Extensions",
+    menuHelp: "Help",
+    manageExtensions: "Manage Extensions",
+    openTerminal: "Open Terminal",
+    line: "Ln",
+    column: "Col",
+    thankYou: "Thank you",
+    Documentation: "Documentation",
+    appDocumentation: "Documentation",
+    appHelp: "Help",
+    action_newDocument: "New Project",
+    action_openDocument: "Open Project",
+    action_save: "Save Project",
+    settings_wordWrap: "Word Wrap",
+    settings_fontSize: "Font Size",
   },
 };

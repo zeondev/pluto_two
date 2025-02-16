@@ -1,4 +1,4 @@
-import Html from "../../libs/html.js";
+import Html from '../../libs/html.js';
 import Ws from "/libs/windowSystem.js";
 import compatibility from "/libs/compatibility.js";
 import Vfs from "../../libs/vfs.js";

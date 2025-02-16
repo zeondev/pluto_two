@@ -80,6 +80,17 @@ const FILE_TYPE = {
 // };
 
 let templateFsLayout = {
+  Registry: {
+    data: {},
+    metaData: {
+      created: Date.now(),
+      modified: Date.now(),
+      type: FILE_TYPE.Folder, // 1
+      owner: "root",
+      read: true,
+      write: true,
+    },
+  },
   Root: {
     data: {
       "README.md": {

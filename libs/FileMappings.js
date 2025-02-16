@@ -2,7 +2,7 @@ let L = {};
 let C = {};
 
 import Vfs from "./vfs.js";
-import Modal from "./modal.js";
+import Modal from "./Modal.js";
 import langManager from "./l10n/manager.js";
 
 export default {
@@ -297,10 +297,10 @@ export default {
         onClick: async (c) => {
           if (map.opensWith === null) return;
           if (map.opensWith === "evaluate") {
-            c.Packages.Run(
+            c.Packages.startFromURL(
               "data:text/javascript," +
-                encodeURIComponent(await Vfs.readFile(path)),
-              false,
+                encodeURIComponent(String(await Vfs.readFile(path)).replace(/"\.\//g, `"${window.location.href}`)),
+              [],
               false
             );
             return;

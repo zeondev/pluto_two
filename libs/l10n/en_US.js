@@ -151,6 +151,9 @@ export default {
   browser: {
     name: "Browser",
   },
+  music: {
+    name: "Music",
+  },
   devenv: {
     name: "DevEnv",
     systemApp_DevEnv: "DevEnv",

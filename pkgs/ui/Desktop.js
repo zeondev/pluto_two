@@ -299,10 +299,10 @@ export default {
     checkTheme();
     let startMenuList = [
       {
-        name: "Radio",
+        name: "Music",
         icon: "./assets/apps/Radio.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:Radio", true, true);
+          await Root.Core.Packages.Run("apps:Music", true, true);
         },
       },
       {
@@ -450,10 +450,10 @@ export default {
         },
       },
       {
-        name: "Radio",
+        name: "Music",
         icon: "./assets/apps/Radio.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:FileManager", true, true);
+          await Root.Core.Packages.Run("apps:Music", true, true);
         },
       },
       {

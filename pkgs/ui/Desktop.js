@@ -5,8 +5,8 @@ import Vfs from "../../libs/vfs.js";
 import { css } from "../../libs/templates.js";
 import ThemeLib from "../../libs/ThemeLib.js";
 import Accounts from "../../libs/Accounts.js";
-import Icons from "../../components/icons.js";
-import icons from "../../components/icons.js";
+import Icons from "../../components/Icons.js";
+import icons from "../../components/Icons.js";
 import FileMappings from "../../libs/FileMappings.js";
 // import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 

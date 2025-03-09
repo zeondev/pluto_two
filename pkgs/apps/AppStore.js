@@ -1,7 +1,7 @@
 import Ws from "../../libs/windowSystem.js";
 import Html from "../../libs/html.js";
 import { css } from "../../libs/templates.js";
-import icons from "../../components/icons.js";
+import icons from "../../components/Icons.js";
 import semver from "../../assets/semver.min.js";
 import Modal from "../../libs/Modal.js";
 import Vfs from "../../libs/vfs.js";

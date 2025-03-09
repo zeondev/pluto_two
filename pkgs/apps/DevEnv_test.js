@@ -4,7 +4,7 @@ import Html from "../../libs/html.js";
 import Ws from "/libs/windowSystem.js";
 import Vfs from "../../libs/vfs.js";
 import Sidebar from "../../components/Sidebar.js";
-import icons from "../../components/icons.js";
+import icons from "../../components/Icons.js";
 import Modal from "../../libs/Modal.js";
 import FileMappings from "../../libs/FileMappings.js";
 import FileDialog from "../../libs/FileDialog.js";

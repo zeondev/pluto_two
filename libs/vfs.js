@@ -421,26 +421,64 @@ const Vfs = {
     return FILE_TYPE[metaData.type];
   },
   // Function to get the contents of a file at a given path
-  async readFile(path, fsObject = this.fileSystem) {
-    const parts = path.split("/");
-    let current = fsObject;
-    let metaData;
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
-      if (typeof current[part] === "undefined") {
-        return null;
+  async readFile(path, fsObject = this.fileSystem,bypass = false) {
+    return new Promise(async (resolve, reject) => {
+      const parts = path.split("/");
+      let current = fsObject;
+      let metaData;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (typeof current[part] === "undefined") {
+          return resolve(null);
+        }
+        metaData = current[part].metaData;
+        current = current[part].data;
       }
-      metaData = current[part].metaData;
-      current = current[part].data;
-    }
-    if (metaData.read !== true) {
-      return null;
-    }
-    if (typeof current !== "string") {
-      return null;
-    }
-    return current;
+      if (metaData.read !== true) {
+        return resolve(null);
+      }
+      if (typeof current !== "string") {
+        return resolve(null);
+      }
+      if (bypass === false) {
+        // special vfs import handler
+        if (current.startsWith("vfsImport:")) {
+          const vfsImportPath = current.substring(10);
+          if (vfsImportPath === "fs")
+            return resolve("vfsImportError:not-allowed");
+          const item = await localforage.getItem(vfsImportPath);
+
+          if (item !== null && item !== undefined) {
+            if (item instanceof Blob) {
+              if (item.size > 1024 * 1024 * 10) {
+                return resolve(URL.createObjectURL(item));
+              } else {
+                let result = await new Promise((resolve, reject) => {
+                  const reader = new FileReader();
+
+                  reader.onload = function (e) {
+                    return resolve(e.target.result);
+                  };
+
+                  reader.readAsDataURL(item);
+                });
+                return resolve(result);
+              }
+            } else {
+              return resolve(item);
+            }
+          } else {
+            return resolve("vfsImportFailed:" + vfsImportPath);
+          }
+        }
+      }
+      document.dispatchEvent(new CustomEvent("pluto.vfs-read"), {
+        detail: { path },
+      });
+      return resolve(current);
+      })
   },
+
 
   async createFile(path, fsObject = this.fileSystem) {
     const parts = path.split("/");
@@ -471,38 +509,71 @@ const Vfs = {
     this.save();
   },
 
-  // Function to write to a file at a given path
+
   async writeFile(path, contents, fsObject = this.fileSystem) {
     try {
-      const parts = path.split("/");
-      const filename = parts.pop();
-      let current = fsObject;
-      let metaData;
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i];
-        if (typeof current[part] === "undefined") {
-          return null;
-        }
-        metaData = current[part].metaData;
-        current = current[part].data;
+    if (typeof contents !== "string")
+      throw new Error("Tried to write a non-string to a file.");
+    const parts = path.split("/");
+    const filename = parts.pop();
+    let current = fsObject;
+    let metaData;
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      if (typeof current[part] === "undefined") {
+        return null;
       }
-      console.log(current);
-      console.log(current[filename]);
-      if (metaData.type !== FILE_TYPE.Folder) return null;
-      if (metaData.write === false) return null;
-      if (metaData.read === false) return null;
-      if (current[filename].metaData.type !== FILE_TYPE.File) return null;
-      if (current[filename].metaData.write === false) return null;
-      if (current[filename].metaData.read === false) return null;
-      current[filename].data = contents;
-      current[filename].metaData.modified = Date.now();
-      this.save();
-      return contents;
-    } catch (e) {
-      Vfs.createFile(path, fsObject);
-      Vfs.writeFile(path, contents, fsObject);
+      metaData = current[part].metaData;
+      current = current[part].data;
     }
+
+    if (metaData.type !== FILE_TYPE.Folder) return null;
+    if (metaData.write === false) return null;
+    if (metaData.read === false) return null;
+    if (current[filename].metaData.type !== FILE_TYPE.File) return null;
+    if (current[filename].metaData.write === false) return null;
+    if (current[filename].metaData.read === false) return null;
+
+
+    // if file has a special
+    if (current[filename].data !== undefined) {
+      // special vfs import handler
+      if (current[filename].data.startsWith("vfsImport:")) {
+        const vfsImportPath = current[filename].data.substring(10);
+        if (vfsImportPath === "fs") return "vfsImportError:not-allowed";
+        await localforage.setItem(vfsImportPath, contents);
+      } else {
+        current[filename].data = contents;
+      }
+    } else {
+      // if file is bigger than 8kb then put it into the special bin
+      if (contents.length > 8192) {
+        const vfsImportPath = Math.random().toString(36).substring(2);
+        if (vfsImportPath === "fs") return "vfsImportError:not-allowed";
+
+        // save link to file
+        await localforage.setItem(vfsImportPath, contents);
+        current[filename].data = `vfsImport:${vfsImportPath}`;
+      } else {
+        // save normally
+        current[filename].data = contents;
+      }
+    }
+
+    current[filename].metaData.modified = Date.now();
+    this.save();
+    document.dispatchEvent(new CustomEvent("pluto.vfs-write"), {
+      detail: { path, contents },
+    });
+    return contents;
+  } catch (e) {
+    Vfs.createFile(path, fsObject);
+    Vfs.writeFile(path, contents, fsObject);
+  }
+
   },
+
+
   // Function to create a new folder at a given path
   async createFolder(path, fsObject = this.fileSystem) {
     const parts = path.split("/");
@@ -535,8 +606,43 @@ const Vfs = {
       };
     this.save();
   },
+
+  // async delete(path, fsObject = this.fileSystem) {
+  //   const parts = path.split("/");
+  //   const filename = parts.pop();
+  //   const parentPath = this.getParentFolder(path);
+  //   let parent = fsObject;
+  //   for (let i = 0; i < parts.length; i++) {
+  //     const part = parts[i];
+  //     if (typeof parent[part] === "undefined") {
+  //       return;
+  //     }
+  //     parent = parent[part];
+  //   }
+
+  //   // maybe use readFile here so we don't
+  //   // accidentally delete the key "fs"
+  //   const tmp = String(await this.readFile(path, this.fileSystem, true));
+  //   console.log(tmp);
+  //   // if it's an import then handle it specially
+  //   if (tmp.startsWith("vfsImport:")) {
+  //     const tmpName = tmp.substring(10);
+  //     await localforage.removeItem(tmpName);
+
+  //     this.log(`Deleted reference file "${tmpName}"`);
+  //   }
+
+  //   delete parent[filename];
+
+  //   this.save("delete " + path);
+
+  //   document.dispatchEvent(new CustomEvent("pluto.vfs-delete"), {
+  //     detail: { path },
+  //   });
+  // },
   // Function to delete a file or folder at a given path
   async delete(path, fsObject = this.fileSystem) {
+    const tmp = String(await this.readFile(path, this.fileSystem, true));
     const parts = path.split("/");
     const filename = parts.pop();
     let parent = fsObject;
@@ -548,6 +654,16 @@ const Vfs = {
       }
       metaData = parent[part].metaData;
       parent = parent[part].data;
+    }
+        // maybe use readFile here so we don't
+    // accidentally delete the key "fs"
+
+    // if it's an import then handle it specially
+    if (tmp.startsWith("vfsImport:")) {
+      const tmpName = tmp.substring(10);
+      await localforage.removeItem(tmpName);
+
+      console.log(`Deleted reference file "${tmpName}"`);
     }
     metaData.modified = Date.now();
     delete parent[filename];

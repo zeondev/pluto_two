@@ -6,6 +6,8 @@ import { css } from "../../libs/templates.js";
 import ThemeLib from "../../libs/ThemeLib.js";
 import Accounts from "../../libs/Accounts.js";
 import Icons from "../../components/icons.js";
+import icons from "../../components/icons.js";
+import FileMappings from "../../libs/FileMappings.js";
 // import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 
 let wrapper; // Lib.html | undefined
@@ -116,7 +118,6 @@ export default {
     .desktop .startMenu {
       width: 70%;
       max-width: 450px;
-      height: 350px;
       position: absolute;
       bottom: calc(8px + 3.4rem + 13px + 10px);
       left: 50%;
@@ -213,6 +214,7 @@ export default {
       flex-direction: column;
       align-items: center;
       gap: 5px;
+      padding-bottom: 35px;
     }
 
     .desktop .startMenu .startMenuContent .app .icon {
@@ -234,6 +236,42 @@ export default {
 
     .desktop .startMenu .startMenuContent .app:hover {
       transform: scale(1.2);
+    }
+
+    .allAppsContainer .content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 300px;
+      overflow-y: auto;
+      max-height: 0;
+      transition: max-height var(--animation-duration) var(--easing-function);
+      height: 300px;
+    }
+
+    .allAppsContainer .content .app {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .allAppsContainer .content img {
+      width: 48px;
+      height: 48px;
+    }
+
+    .allAppsContainer .allApps {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--root);
+      border-radius: 8px;
+      padding: 5px;
+      color: var(--text);
+      font-size: 0.9rem;
+      cursor: pointer;
     }
   `,
   start: async function (Root) {
@@ -297,6 +335,144 @@ export default {
     }
 
     checkTheme();
+
+
+
+    let allStockApps = [
+      {
+        name: "Music",
+        icon: "./assets/apps/Radio.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Music", true, true);
+        },
+      },
+      {
+        name: "Notepad",
+        icon: "./assets/apps/Notepad.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Notepad", true, true);
+        },
+      },
+      {
+        name: "Store",
+        icon: "./assets/apps/Store.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Store", true, true);
+        },
+      },
+      {
+        name: "File Manager",
+        icon: "./assets/apps/FileManager.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:FileManager", true, true);
+        },
+      },
+      {
+        name: "Settings",
+        icon: "./assets/apps/Settings.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Settings", true, true);
+        },
+      },
+      {
+        name: "Weather",
+        icon: "./assets/apps/Weather.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Weather", true, true);
+        },
+      },
+      {
+        name: "Terminal",
+        icon: "./assets/apps/Terminal.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Terminal", true, true);
+        },
+      },
+      {
+        name: "Snake",
+        icon: "./assets/apps/Snake.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Snake", true, true);
+        },
+      },
+      {
+        name: "Browser",
+        icon: "./assets/apps/Browser.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Browser", true, true);
+        },
+      },
+      {
+        name: "Photos",
+        icon: "./assets/apps/Photos.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Photos", true, true);
+        },
+      },
+      {
+        name: "DevEnv",
+        icon: "./assets/apps/DevEnv.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:DevEnv", true, true);
+        },
+      },
+      {
+        name: "Videos",
+        icon: "./assets/apps/Videos.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:Videos", true, true);
+        },
+      },
+    ];
+
+    const installedApps = (await Vfs.list("Root/Pluto/apps"))
+    .filter((f) => f.item.endsWith(".app") || f.item.endsWith(".pml"))
+    .map((f) => {
+      return { type: "installed", item: f.item };
+    });
+    let asApps = [];
+    const asExists = await Vfs.whatIs(
+      "Registry/AppStore/_AppStoreIndex.json"
+    );
+    if (asExists !== null) {
+      console.log(asExists);
+      asApps = (await Vfs.list("Registry/AppStore"))
+        .filter((f) => f.item.endsWith(".app") || f.item.endsWith(".pml"))
+        .map((f) => {
+          return { type: "appStore", item: f.item };
+        });
+    }
+    let tempList = [...installedApps, ...asApps];
+    let tempList2 = [];
+    console.warn(installedApps, asApps);
+    let i = 0;
+    for (i = 0; i < tempList.length; i++) {
+      let app = tempList[i];
+      let name = ""
+      let icon = ""
+      if (app.type === "appStore") {
+        name = JSON.parse(await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json"))[String(app.item).replace(".app", "").replace(".pml", "")].name
+        icon = JSON.parse(await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json"))[String(app.item).replace(".app", "").replace(".pml", "")].icon
+        alert(name)
+      } else {
+        name = app.item.replace(".app", "").replace(".pml", "")
+        const data = await FileMappings.retrieveAllMIMEdata(
+          "Root/Desktop/" + app.item
+        );
+        // regex all special characters for data uri including < > / \ : * ? " ' |
+        icon = "data:image/svg+xml," + encodeURIComponent(icons[String(data.icon)]);
+      }
+        const data = await FileMappings.retrieveAllMIMEdata(
+          "Root/Desktop/" + app.item
+        );
+        tempList2.push({"name": name, "icon": icon, "onClick": async () => {
+          await Root.Core.Packages.Run("apps:" + app.item.replace(".app", "").replace(".pml", ""), true, true);
+        }})
+        console.error(data)
+
+    }
+
+    let allAppsList = [...allStockApps, ...tempList2]
     let startMenuList = [
       {
         name: "Music",
@@ -306,10 +482,10 @@ export default {
         },
       },
       {
-        name: "Assistant",
-        icon: "./assets/apps/Assistant.svg",
+        name: "Notepad",
+        icon: "./assets/apps/Notepad.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:Assistant", true, true);
+          await Root.Core.Packages.Run("apps:Notepad", true, true);
         },
       },
       {
@@ -390,43 +566,125 @@ export default {
       );
     });
 
+    let userDisplay = new Html("div")
+      .class("info")
+      .appendMany(
+        new Html("div")
+          .class("avatar")
+          .style({ "background-image": "url(" + userData.pfp + ")" }),
+        new Html("div")
+          .class("usernameWrapper")
+          .appendMany(
+            new Html("div")
+              .class("username")
+              .html("Hello, " + userData.username),
+            new Html("div")
+              .class("status")
+              .html(
+                userData.onlineAccount ? "Online Account" : "Offline Account"
+              )
+          )
+      );
+
+    let smc = new Html("div")
+      .class("startMenuContent")
+      .appendMany(...startMenuApps);
+    let allAppsContent = new Html("div").class("content").appendMany(
+      ...allAppsList.map((app) => {
+        return new Html("div").class("app").appendMany(
+          new Html("img").class("icon").attr({
+            src: app.icon,
+          }),
+          new Html("span").class("title").html(app.name)
+        ).on("click", async () => {
+          if (startMenu.elm.classList.contains("show")) {
+            startMenu.class(
+              "slideInCenteredFromBottom",
+              "slideOutCenteredFromBottom"
+            );
+            setTimeout(() => {
+              startMenu.class("hide", "show");
+            }, 300);
+          } else {
+            startMenu.class(
+              "hide",
+              "show",
+              "slideInCenteredFromBottom",
+              "slideOutCenteredFromBottom"
+            );
+          }
+          let thisElm = allApps.qs(".allApps").elm
+          thisElm.classList.toggle("active");
+            var content = thisElm.nextElementSibling;
+            if (content.style.display === "flex") {
+              content.style.maxHeight = null;
+              thisElm.innerHTML = icons.chevronUp + "All Apps";
+      
+              setTimeout(() => {
+                content.scrollTo(0, 0);
+                content.style.display = "none";
+              }, 500);
+            } else {
+
+
+
+              content.style.display = "flex";
+              thisElm.innerHTML = icons.chevronDown + "All Apps";
+              content.style.maxHeight = content.scrollHeight + "px";
+            }
+          app.onClick()
+        });
+      })
+    );
+    let allApps = new Html("div")
+      .class("allAppsContainer")
+      .appendMany(
+        new Html("div").class("allApps").html(icons.chevronUp + "All Apps"),
+        allAppsContent
+      );
+
     let startMenu = new Html("div")
       .appendTo(wrapper)
       .appendMany(
-        new Html("div")
-          .class("topWrapper")
-          .appendMany(
-            new Html("div")
-              .class("info")
-              .appendMany(
-                new Html("div")
-                  .class("avatar")
-                  .style({ "background-image": "url(" + userData.pfp + ")" }),
-                new Html("div")
-                  .class("usernameWrapper")
-                  .appendMany(
-                    new Html("div")
-                      .class("username")
-                      .html("Hello, " + userData.username),
-                    new Html("div")
-                      .class("status")
-                      .html(
-                        userData.onlineAccount
-                          ? "Online Account"
-                          : "Offline Account"
-                      )
-                  )
-              ),
-            new Html("div")
-              .class("actions")
-              .appendMany(
-                new Html("button").html(Icons.wrench),
-                new Html("button").html(Icons.power)
-              )
-          ),
-        new Html("div").class("startMenuContent").appendMany(...startMenuApps)
+        new Html("div").class("topWrapper").appendMany(
+          userDisplay,
+          new Html("div").class("actions").appendMany(
+            new Html("button").html(Icons.wrench).on("click", () => {
+              Root.Core.Packages.Run("apps:Settings", true, true);
+              // hide sm
+              startMenu.class(
+                "slideInCenteredFromBottom",
+                "slideOutCenteredFromBottom"
+              );
+              setTimeout(() => {
+                startMenu.class("hide", "show");
+              }, 300);
+            }),
+            new Html("button").html(Icons.power)
+          )
+        ),
+        smc,
+        allApps
       )
       .class("startMenu", "slideOutCenteredFromBottom", "hide");
+
+    allApps.qs(".allApps").elm.addEventListener("click", async function () {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "flex") {
+        content.style.maxHeight = null;
+        this.innerHTML = icons.chevronUp + "All Apps";
+
+        setTimeout(() => {
+          content.scrollTo(0, 0);
+          content.style.display = "none";
+        }, 500);
+      } else {
+        content.style.display = "flex";
+        this.innerHTML = icons.chevronDown + "All Apps";
+        content.style.maxHeight = content.scrollHeight + "px";
+      }
+    });
 
     let grid = document.querySelector(".desktop .startMenu .startMenuContent");
     new Sortable(grid, {
@@ -439,14 +697,14 @@ export default {
         name: "Weather",
         icon: "./assets/apps/Weather.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:FileManager", true, true);
+          await Root.Core.Packages.Run("apps:Weather", true, true);
         },
       },
       {
         name: "Browser",
         icon: "./assets/apps/Browser.svg",
         onClick: async () => {
-          await Root.Core.Packages.Run("apps:FileManager", true, true);
+          await Root.Core.Packages.Run("apps:Browser", true, true);
         },
       },
       {
@@ -481,6 +739,30 @@ export default {
         })
       )
       .on("click", async () => {
+        userData = Accounts.getUserData();
+
+        startMenu.qs(".info").clear();
+        startMenu
+          .qs(".info")
+          .appendMany(
+            new Html("div")
+              .class("avatar")
+              .style({ "background-image": "url(" + userData.pfp + ")" }),
+            new Html("div")
+              .class("usernameWrapper")
+              .appendMany(
+                new Html("div")
+                  .class("username")
+                  .html("Hello, " + userData.username),
+                new Html("div")
+                  .class("status")
+                  .html(
+                    userData.onlineAccount
+                      ? "Online Account"
+                      : "Offline Account"
+                  )
+              )
+          );
         if (startMenu.elm.classList.contains("show")) {
           startMenu.class(
             "slideInCenteredFromBottom",
@@ -531,7 +813,7 @@ export default {
         }
       });
     }
-    Root.Core.Packages.Run("apps:DevEnv", true, true);
+    Root.Core.Packages.Run("apps:AppStore", true, true);
   },
   end: async function () {
     wrapper.cleanup();

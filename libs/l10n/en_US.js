@@ -197,4 +197,15 @@ export default {
     settings_wordWrap: "Word Wrap",
     settings_fontSize: "Font Size",
   },
+  photos:
+  {
+    name: "Photos",
+    imageLoadError: "This does not look like an image",
+    backToOverview: "Back to Overview",
+    noPictures: "No images found",
+    noPicturesTitle: "You have no pictures",
+    noPicturesDescription:
+      'Upload Photos inside of the "Pictures" folder in the File Manager to get them to show up here.',
+    pageOverview: "Overview",
+  },
 };

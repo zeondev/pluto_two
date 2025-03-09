@@ -12,13 +12,13 @@ import NowPlaying from "../../libs/NowPlaying.js";
 
 let MyWindow;
 
+
 export default {
   name: langManager.getString("music.name"),
   type: "app",
   privs: 0,
   start: async function (Root) {
     let wrapper; // Lib.html | undefined
-    let MyWindow;
 
     const Html = (await import("https://unpkg.com/@datkat21/html")).default;
 
@@ -106,6 +106,8 @@ export default {
         justifyContent: "center",
         width: "100%",
         height: "100%",
+        alignItems: "center",
+        gap: "10px",
       })
       .appendTo(wrapper);
 

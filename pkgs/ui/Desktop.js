@@ -813,7 +813,7 @@ export default {
         }
       });
     }
-    Root.Core.Packages.Run("apps:AppStore", true, true);
+    // Root.Core.Packages.Run("apps:AppStore", true, true);
   },
   end: async function () {
     wrapper.cleanup();

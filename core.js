@@ -101,6 +101,7 @@ let Packages = {
       pid,
       icon: pkgData.icon,
       name: pkgData.name,
+      url:  url,
       priveleged: pkgData.privs,
       async end() {
         let result = await pkgData.end();

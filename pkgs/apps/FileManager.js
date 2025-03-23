@@ -40,7 +40,7 @@ const pkg = {
 
     const appName = "File Manager";
     win = new Ws.data.win({
-      title: "Compatibility",
+      title: appName,
       icon: "/assets/pluto-logo.svg",
       width: 400,
       height: 400,

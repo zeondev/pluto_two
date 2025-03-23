@@ -1,3 +1,4 @@
+
 export default {
   languages: {
     en_US: "English (United States)",
@@ -208,4 +209,14 @@ export default {
       'Upload Photos inside of the "Pictures" folder in the File Manager to get them to show up here.',
     pageOverview: "Overview",
   },
+  taskManager: {
+    name: "Task Manager",
+    table_type: "Type",
+    table_appId: "App ID",
+    table_details: "Details",
+    table_pid: "PID",
+    input_appId: "App ID (apps:...)",
+    endProcess: "End Task",
+    launchApp: "Launch App",
+  }
 };

@@ -4,6 +4,7 @@ import Vfs from "../../libs/vfs.js";
 import ThemeLib from "../../libs/ThemeLib.js";
 import langManager from "../../libs/l10n/manager.js";
 import Users from "../../libs/Users.js";
+import FileMappings from "../../libs/FileMappings.js";
 
 let myWindow;
 
@@ -12,6 +13,8 @@ const pkg = {
   type: "app",
   privs: 1,
   start: async function (Root) {
+    try {
+      if (localStorage.getItem("error") == "force") throw TypeError("Forced error");
     await Vfs.importFS();
     console.log(Root);
     console.log("BootLoader started");
@@ -55,11 +58,62 @@ const pkg = {
 
     // await Root.Core.Packages.Run("ui:Desktop");
     // await Root.Core.Packages.Run("apps:Notepad");
-    if (appearanceConfig.hasSetupSystem !== true) {
-      await Root.Core.Packages.Run("ui:Welcome", true, true);
+
+    if (await Vfs.exists("Root/Pluto/config/settingsConfig.json")) {
+      let settingsConfig = JSON.parse(
+        await Vfs.readFile("Root/Pluto/config/settingsConfig.json")
+      );
+
+      if (
+        settingsConfig !== undefined &&
+        settingsConfig.NoUI !== undefined
+      ) {
+        if (settingsConfig.NoUI === true) {
+          await Root.Core.Packages.Run("system:NoUI", true, true);
+        } else {
+          if (
+            settingsConfig !== undefined &&
+            settingsConfig.bootApp !== undefined
+          ) {
+            let appMapping = await FileMapping.retrieveAllMIMEdata(
+              settingsConfig.bootApp,
+              vfs
+            );
+            appMapping.onClick(Root.Core);
+            // await Root.Core.startPkg(
+            //   mapping.onClick(Root.Core);
+            //   await vfs.readFile(settingsConfig.bootApp),
+            //   false,
+            //   true
+            // );
+    
+          } else {
+            if (appearanceConfig.hasSetupSystem !== true) {
+              await Root.Core.Packages.Run("ui:Welcome", true, true);
+            } else {
+              await Root.Core.Packages.Run("ui:Desktop", true, true);
+            }
+          }
+        }
+      }else {
+        if (appearanceConfig.hasSetupSystem !== true) {
+          await Root.Core.Packages.Run("ui:Welcome", true, true);
+        } else {
+          await Root.Core.Packages.Run("ui:Desktop", true, true);
+        }
+      }
+      
+      
     } else {
-      await Root.Core.Packages.Run("ui:Desktop", true, true);
+      if (appearanceConfig.hasSetupSystem !== true) {
+        await Root.Core.Packages.Run("ui:Welcome", true, true);
+      } else {
+        await Root.Core.Packages.Run("ui:Desktop", true, true);
+      }
     }
+
+
+
     // await ThemeLib.setCurrentTheme(
     //   await Vfs.readFile("Root/Pluto/config/themes/light.theme")
     // );
@@ -74,6 +128,10 @@ const pkg = {
 
     window.Vfs = Vfs;
     await checkTheme();
+  } catch (e) {
+      Root.Core.Packages.Run("system:Basic", true, true)
+      window.err = e
+  }
   },
   end: async function () {
     // Close the window when the process is exited

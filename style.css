@@ -438,6 +438,14 @@ textarea,
   }
 }
 
+.fadeIn {
+  animation: fadeIn var(--animation-duration) var(--easing-function) forwards;
+}
+
+.fadeOut {
+  animation: fadeOut var(--animation-duration) var(--easing-function) forwards;
+}
+
 iframe {
   width: 100%;
   height: 100%;

@@ -31,7 +31,7 @@ let RegisteredApps = new Map();
 let Processes = {
   list: new Map(),
   add: (pid, process) => {
-    Processes.list.set(pid, process);
+    return Processes.list.set(pid, process);
   },
   get: (pid) => {
     return Processes.list.get(pid);
@@ -39,18 +39,20 @@ let Processes = {
   remove: (pid) => {
     if (Processes.list.has(pid)) {
       Processes.list.set(pid, null);
-      Processes.list.delete(pid);
+      // Processes.list.delete(pid);
     }
     return;
   },
   findEmptyPid: () => {
-    let emptyPid = null;
-    Processes.list.forEach((value, key) => {
-      if (value === null) {
-        emptyPid = key;
-      }
-    });
-    return emptyPid !== null ? emptyPid : Processes.list.size;
+    // let emptyPid = null;
+    // Processes.list.forEach((value, key) => {
+    //   if (value === null) {
+    //     emptyPid = key;
+    //   }
+    // });
+    // return emptyPid !== null ? emptyPid : Processes.list.size;
+    let r = Array.from(Processes.list).findIndex((p) => p === null);
+    return r !== -1 ? r : Array.from(Processes.list).length;
   },
 };
 

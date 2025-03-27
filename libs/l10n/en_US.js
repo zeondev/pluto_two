@@ -145,6 +145,8 @@ export default {
     localApps: "Local applications",
     knownPackageList: "Loaded packages",
     appStoreOpenToSeeApps: "Open the App Store to see installed applications",
+    other: "Other",
+    recovery: "Recovery",
   },
   weather: {
     name: "Weather",

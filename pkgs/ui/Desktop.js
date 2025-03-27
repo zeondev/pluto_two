@@ -423,6 +423,13 @@ export default {
           await Root.Core.Packages.Run("apps:Videos", true, true);
         },
       },
+      {
+        name: "Task Manager",
+        icon: "./assets/apps/TaskManager.svg",
+        onClick: async () => {
+          await Root.Core.Packages.Run("apps:TaskManager", true, true);
+        }
+      }
     ];
 
     const installedApps = (await Vfs.list("Root/Pluto/apps"))
@@ -817,5 +824,6 @@ export default {
   },
   end: async function () {
     wrapper.cleanup();
+    return true;
   },
 };

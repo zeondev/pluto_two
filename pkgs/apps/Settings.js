@@ -418,6 +418,23 @@ const pkg = {
               )
           )
           .appendTo(wrapperWrapper);
+          makeHeading("h2", langManager.getString("settings.other"));
+
+          const recoveryButton = new Html("button")
+          .text(langManager.getString("settings.recovery"))
+          .class("primary", "mc", "small")
+          .on("click", async () => {
+            let x = await Modal.prompt(
+              "Recovery",
+              "Do you want to reboot into recovery mode?",
+              wrapperWrapper
+            )
+            if (x) {
+              localStorage.setItem("recovery", "true");
+              location.reload();
+            }
+          })
+          .appendTo(wrapperWrapper);
       },
       accounts: () => {
         currentPage = "accounts";

@@ -67,9 +67,9 @@ privs:1,
       Array.from(Root.Core !== null ? Root.Core.Processes.list : new Map());
 
       for (let i = 0; i < processes.length; i++) {
+        if (Object.keys(processes[i][1]).length === 0) continue;
         let tableBodyRow = new Html("tr")
           .on("click", (_) => {
-            console.log(proc)
             selectedPid = proc[1].pid;
             makeTaskTable();
           })
@@ -80,7 +80,7 @@ privs:1,
                 item: langManager.getString("taskManager.endProcess"),
                 async select() {
                   let p = Root.Core.Processes.List
-                    .filter((p) => p !== null)
+                    .filter((p) => p[1] !== null)
                     .find((p) => p[1].pid === proc[1].pid);
                   p?.end();
                   selectedPid = -1;
@@ -91,10 +91,9 @@ privs:1,
           })
           .appendTo(tableBody);
         let proc = processes[i];
-          
-        if (proc === null) continue;
+        if (proc[1] === null) continue;
 
-        if (selectedPid === proc.pid) tableBodyRow.class("table-selected");
+        if (selectedPid === proc[1].pid) tableBodyRow.class("table-selected");
     
         let fullName = proc[1].url.split("/").filter(n => n).splice(1);
         let name = fullName[1];
@@ -143,10 +142,9 @@ privs:1,
             return;
           }
           let p = Array.from(Root.Core.Processes.list)
-            .filter((p) => p !== null)
+            .filter((p) => p[1] !== null)
             .find((p) => p[1].pid === selectedPid);
           p[1]?.end();
-          console.log(p,selectedPid)
           selectedPid = -1;
           makeTaskTable();
         });

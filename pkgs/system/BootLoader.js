@@ -15,6 +15,7 @@ const pkg = {
   start: async function (Root) {
     try {
       if (localStorage.getItem("error") == "force") throw TypeError("Forced error");
+      if (localStorage.getItem("recovery") == "true") {localStorage.removeItem("recovery"); throw Error("Restart into recovery");}
     await Vfs.importFS();
     console.log(Root);
     console.log("BootLoader started");

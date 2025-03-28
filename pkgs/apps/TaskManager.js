@@ -10,12 +10,8 @@ let remakeTable;
 export default {
   name: "Task Manager",
   type: "app",
-privs:1,
+  privs: 1,
   start: async function (Root) {
-
-
-
-
     TaskManagerWindow = new windowSystem.data.win({
       title: langManager.getString("taskManager.name"),
       content: "Loading...",
@@ -26,7 +22,6 @@ privs:1,
         Root.End();
       },
     });
-
 
     wrapper = TaskManagerWindow.window.querySelector(".win-content");
     wrapper.innerHTML = "";
@@ -63,11 +58,24 @@ privs:1,
 
       let tableBody = new Html("tbody").appendTo(table);
 
-      let processes =
-      Array.from(Root.Core !== null ? Root.Core.Processes.list : new Map());
+      let processes = Array.from(
+        Root.Core !== null ? Root.Core.Processes.list : new Map()
+      );
 
       for (let i = 0; i < processes.length; i++) {
-        if (Object.keys(processes[i][1]).length === 0) continue;
+        console.log(
+          processes[i],
+          processes[i][1]
+          // Object.keys(processes[i][1]),
+          // Object.keys(processes[i][1]).length,
+          // Object.keys(processes[i][1]).length === 0 &&
+          //   Object.keys(processes[i][1]).length !== null
+        );
+        if (processes[i][1] !== null) {
+          if (Object.keys(processes[i][1]).length === 0) {
+            continue;
+          }
+        }
         let tableBodyRow = new Html("tr")
           .on("click", (_) => {
             selectedPid = proc[1].pid;
@@ -79,9 +87,9 @@ privs:1,
               {
                 item: langManager.getString("taskManager.endProcess"),
                 async select() {
-                  let p = Root.Core.Processes.List
-                    .filter((p) => p[1] !== null)
-                    .find((p) => p[1].pid === proc[1].pid);
+                  let p = Root.Core.Processes.List.filter(
+                    (p) => p[1] !== null
+                  ).find((p) => p[1].pid === proc[1].pid);
                   p?.end();
                   selectedPid = -1;
                   makeTaskTable();
@@ -94,13 +102,18 @@ privs:1,
         if (proc[1] === null) continue;
 
         if (selectedPid === proc[1].pid) tableBodyRow.class("table-selected");
-    
-        let fullName = proc[1].url.split("/").filter(n => n).splice(1);
+
+        let fullName = proc[1].url
+          .split("/")
+          .filter((n) => n)
+          .splice(1);
         let name = fullName[1];
         let category = fullName[0];
 
         new Html("td").text(category).appendTo(tableBodyRow);
-        new Html("td").text(name.replace(".js", "").replace(".pml", "")).appendTo(tableBodyRow);
+        new Html("td")
+          .text(name.replace(".js", "").replace(".pml", ""))
+          .appendTo(tableBodyRow);
         if (proc[1]) {
           new Html("td").text(proc[1].name).appendTo(tableBodyRow);
           new Html("td").text("").appendTo(tableBodyRow);
@@ -125,7 +138,9 @@ privs:1,
       .text(langManager.getString("taskManager.launchApp"))
       .appendTo(buttonRow)
       .on("click", (e) => {
-        Root.Core.Packages.Run("apps:" + x.elm.value.replace(/([^A-Za-z0-9-])/g, ""));
+        Root.Core.Packages.Run(
+          "apps:" + x.elm.value.replace(/([^A-Za-z0-9-])/g, "")
+        );
       });
 
     remakeTable = setInterval((_) => {
@@ -151,16 +166,13 @@ privs:1,
     }
 
     document.addEventListener("pluto.lang-change", () => {
-        TaskManagerWindow.setTitle(
-            langManager.getString("taskManager.name")
-          );
-    })
-
+      TaskManagerWindow.setTitle(langManager.getString("taskManager.name"));
+    });
   },
 
   async end(root) {
     TaskManagerWindow.close();
     clearInterval(remakeTable);
     return true;
-  }
+  },
 };

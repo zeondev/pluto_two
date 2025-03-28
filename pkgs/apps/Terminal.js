@@ -553,5 +553,6 @@ export default {
   end: async function () {
     // Close the window when the process is exited
     win.close();
+    return true;
   },
 };

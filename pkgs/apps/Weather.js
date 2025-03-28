@@ -35,6 +35,9 @@ const pkg = {
       title: langManager.getString("weather.name"),
       width: 512,
       height: 348,
+      onclose: () => {
+        Root.End();
+      },
     });
 
     let index = {

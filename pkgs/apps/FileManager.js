@@ -10,10 +10,10 @@ import { css } from "../../libs/templates.js";
 import CtxMenu from "../../libs/CtxMenu.js";
 import langManager from "../../libs/l10n/manager.js";
 
-
 function makeid(length) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   let counter = 0;
   while (counter < length) {
@@ -44,6 +44,9 @@ const pkg = {
       icon: "/assets/pluto-logo.svg",
       width: 400,
       height: 400,
+      onclose: () => {
+        Root.End();
+      },
     });
 
     const setTitle = (t) =>
@@ -478,6 +481,7 @@ const pkg = {
   end: async function () {
     // Close the window when the process is exited
     win.close();
+    return true;
   },
 };
 

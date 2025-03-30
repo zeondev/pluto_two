@@ -796,7 +796,7 @@ const pkg = {
     };
 
     makeSidebar();
-    pages.accounts();
+    pages.system();
     document.addEventListener("pluto.lang-change", (e) => {
       pages[currentPage]();
       win.setTitle(langManager.getString("settings.name"));

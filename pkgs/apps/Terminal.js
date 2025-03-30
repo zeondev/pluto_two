@@ -287,24 +287,25 @@ export default {
           case "help":
             appendOutput(
               `No-UI commands:
-    cat [file]    Print the contents of a file
-    cd [dir]      Change directory
-    clear         Clear the screen
-    echo [msg]    Print something to the screen
-    exit          Quit this mode
-    help          Displays this menu
-    js            Switch to JavaScript mode
-    ls            List files in the current directory
-    mkdir [dir]   Create a directory
-    pwd           Print the current directory
-    rm [file]     Delete a file
-    rmdir [dir]   Delete a directory
-    touch [file]  Create a file
-    uname         Lists system information
-    curl [url]    Fetch a URL
-    wget [url]    Download a URL
-    install [url] Install an app from a URL
-    whoami        Print the current username<br>
+    cat [file]       Print the contents of a file
+    cd [dir]         Change directory
+    clear            Clear the screen
+    echo [msg]       Print something to the screen
+    exit             Quit this mode
+    help             Displays this menu
+    js               Switch to JavaScript mode
+    ls               List files in the current directory
+    mkdir [dir]      Create a directory
+    pwd              Print the current directory
+    rm [file]        Delete a file
+    rmdir [dir]      Delete a directory
+    touch [file]     Create a file
+    uname            Lists system information
+    curl [url]       Fetch a URL
+    wget [url]       Download a URL
+    install [url]    Install an app from a URL
+    whoami           Print the current username
+    launch [cat:app] Launch an app<br>
     `
             );
             break;
@@ -500,6 +501,15 @@ export default {
             const userData = service.ref.getUserData();
             let username = userData.username;
             appendOutput(username);
+            break;
+          case "launch":
+            let app = argsStr.trim();
+
+            if (app === "") {
+              appendOutput("No app specified");
+              break;
+            }
+            Root.Core.Packages.Run(app, true);
             break;
           default:
             if (cmd !== "") {

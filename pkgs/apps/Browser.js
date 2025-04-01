@@ -30,6 +30,9 @@ const pkg = {
       title: langManager.getString("browser.name"),
       width: 312,
       height: 248,
+      onclose: () => {
+        Root.End();
+      },
     });
 
     // let setTitle = (t) =>

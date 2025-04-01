@@ -34,6 +34,9 @@ const pkg = {
         icon: "/assets/pluto-logo.svg",
         width: 400,
         height: 400,
+        onclose: () => {
+          Root.End();
+        },
       });
 
       let wrapper = win.window.querySelector(".win-content");
@@ -55,6 +58,7 @@ const pkg = {
   end: async function () {
     // Close the window when the process is exited
     win.close();
+    return true;
   },
 };
 

@@ -126,11 +126,13 @@ const pkg = {
     console.log(wrapper);
 
     const asFilePath = "Registry/AppStore";
-    let asIndex
+    let asIndex;
     if (await Vfs.exists("Registry/AppStore/_AppStoreIndex.json")) {
-      asIndex = JSON.parse(await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json"))
+      asIndex = JSON.parse(
+        await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json")
+      );
     } else {
-      asIndex = {}
+      asIndex = {};
     }
 
     async function updateAsIndex() {
@@ -258,14 +260,18 @@ const pkg = {
             )
           );
 
-          ((await Vfs.exists(
+          (await Vfs.exists(
             `${asFilePath}/${app.id.replace(/\//g, "--")}${".app"}`
           )) &&
           (await Vfs.readFile(
             `${asFilePath}/${app.id.replace(/\//g, "--")}${".app"}`
-          ) == ""))
-            ? (localHash = "" )
-            : ((await Vfs.whatIs(`${asFilePath}/${app.id.replace(/\//g, "--")}${".app"}`) == null) ? appHash = localHash : localHash = localHash);
+          )) == ""
+            ? (localHash = "")
+            : (await Vfs.whatIs(
+                `${asFilePath}/${app.id.replace(/\//g, "--")}${".app"}`
+              )) == null
+            ? (appHash = localHash)
+            : (localHash = localHash);
           new Html("button")
             .class("appstore-app")
             .appendMany(
@@ -314,25 +320,29 @@ const pkg = {
             pages[currentPage]();
           })
           .appendTo(wrapper);
-          let appHash = await fetch(
-            `${server}pkgs/${info.id}/${info.assets.path}?t=` + performance.now()
-          ).then(async (e) => {
-            return new window.Hashes.MD5().hex(await e.text());
-          });
-          let localHash = new window.Hashes.MD5().hex(
-            await Vfs.readFile(
-              `${asFilePath}/${info.id.replace(/\//g, "--")}${".app"}`
-            )
-          );
+        let appHash = await fetch(
+          `${server}pkgs/${info.id}/${info.assets.path}?t=` + performance.now()
+        ).then(async (e) => {
+          return new window.Hashes.MD5().hex(await e.text());
+        });
+        let localHash = new window.Hashes.MD5().hex(
+          await Vfs.readFile(
+            `${asFilePath}/${info.id.replace(/\//g, "--")}${".app"}`
+          )
+        );
 
-          ((await Vfs.exists(
-            `${asFilePath}/${info.id.replace(/\//g, "--")}${".app"}`
-          )) &&
-          (await Vfs.readFile(
-            `${asFilePath}/${info.id.replace(/\//g, "--")}${".app"}`
-          ) == ""))
-            ? (localHash = "" )
-            : ((await Vfs.whatIs(`${asFilePath}/${info.id.replace(/\//g, "--")}${".app"}`) == null) ? appHash = localHash : localHash = localHash);
+        (await Vfs.exists(
+          `${asFilePath}/${info.id.replace(/\//g, "--")}${".app"}`
+        )) &&
+        (await Vfs.readFile(
+          `${asFilePath}/${info.id.replace(/\//g, "--")}${".app"}`
+        )) == ""
+          ? (localHash = "")
+          : (await Vfs.whatIs(
+              `${asFilePath}/${info.id.replace(/\//g, "--")}${".app"}`
+            )) == null
+          ? (appHash = localHash)
+          : (localHash = localHash);
         new Html("div")
           .class("banner")
           .appendMany(
@@ -491,6 +501,7 @@ const pkg = {
   end: async function () {
     // Close the window when the process is exited
     MyWindow.close();
+    return true;
   },
 };
 

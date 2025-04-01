@@ -12,7 +12,6 @@ import NowPlaying from "../../libs/NowPlaying.js";
 
 let MyWindow;
 
-
 export default {
   name: langManager.getString("music.name"),
   type: "app",
@@ -269,5 +268,6 @@ export default {
       NowPlaying.disposePlayer();
     }, 1000);
     MyWindow.close();
+    return true;
   },
 };

@@ -27,6 +27,9 @@ const pkg = {
       title: langManager.getString("settings.name"),
       width: 500,
       height: 400,
+      onclose: () => {
+        Root.End();
+      },
     });
 
     // let setTitle = (t) =>
@@ -418,9 +421,9 @@ const pkg = {
               )
           )
           .appendTo(wrapperWrapper);
-          makeHeading("h2", langManager.getString("settings.other"));
+        makeHeading("h2", langManager.getString("settings.other"));
 
-          const recoveryButton = new Html("button")
+        const recoveryButton = new Html("button")
           .text(langManager.getString("settings.recovery"))
           .class("primary", "mc", "small")
           .on("click", async () => {
@@ -428,7 +431,7 @@ const pkg = {
               "Recovery",
               "Do you want to reboot into recovery mode?",
               wrapperWrapper
-            )
+            );
             if (x) {
               localStorage.setItem("recovery", "true");
               location.reload();
@@ -793,7 +796,7 @@ const pkg = {
     };
 
     makeSidebar();
-    pages.accounts();
+    pages.system();
     document.addEventListener("pluto.lang-change", (e) => {
       pages[currentPage]();
       win.setTitle(langManager.getString("settings.name"));

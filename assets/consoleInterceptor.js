@@ -3,6 +3,14 @@ const oldConsole = console;
 let log = [];
 window.log = log;
 
+let pushEvent = () => {
+  document.dispatchEvent(
+    new CustomEvent("pluto.consoleEvent", {
+      detail: "refreshList",
+    })
+  );
+};
+
 const newConsole = {
   assert: (a) => {
     oldConsole.assert(a);
@@ -10,6 +18,7 @@ const newConsole = {
       type: "",
       content: a,
     });
+    pushEvent();
   },
   clear: (a) => {
     oldConsole.clear(a);
@@ -17,6 +26,7 @@ const newConsole = {
       type: "clear",
       content: a,
     });
+    pushEvent();
   },
   count: (a) => {
     oldConsole.count(a);
@@ -24,6 +34,7 @@ const newConsole = {
       type: "count",
       content: a,
     });
+    pushEvent();
   },
   countReset: (a) => {
     oldConsole.countReset(a);
@@ -31,6 +42,7 @@ const newConsole = {
       type: "countReset",
       content: a,
     });
+    pushEvent();
   },
   debug: (a) => {
     oldConsole.debug(a);
@@ -38,6 +50,7 @@ const newConsole = {
       type: "debug",
       content: a,
     });
+    pushEvent();
   },
   dir: (a) => {
     oldConsole.dir(a);
@@ -45,6 +58,7 @@ const newConsole = {
       type: "dir",
       content: a,
     });
+    pushEvent();
   },
   dirxml: (a) => {
     oldConsole.dirxml(a);
@@ -52,6 +66,7 @@ const newConsole = {
       type: "dirxml",
       content: a,
     });
+    pushEvent();
   },
   error: (a) => {
     oldConsole.error(a);
@@ -59,6 +74,7 @@ const newConsole = {
       type: "error",
       content: a,
     });
+    pushEvent();
   },
   exception: (a) => {
     oldConsole.exception(a);
@@ -66,6 +82,7 @@ const newConsole = {
       type: "exception",
       content: a,
     });
+    pushEvent();
   },
   group: (a) => {
     oldConsole.group(a);
@@ -73,6 +90,7 @@ const newConsole = {
       type: "group",
       content: a,
     });
+    pushEvent();
   },
   groupCollapsed: (a) => {
     oldConsole.groupCollapsed(a);
@@ -80,6 +98,7 @@ const newConsole = {
       type: "groupCollapsed",
       content: a,
     });
+    pushEvent();
   },
   groupEnd: (a) => {
     oldConsole.groupEnd(a);
@@ -87,6 +106,7 @@ const newConsole = {
       type: "groupEnd",
       content: a,
     });
+    pushEvent();
   },
   info: (a) => {
     oldConsole.info(a);
@@ -94,6 +114,7 @@ const newConsole = {
       type: "info",
       content: a,
     });
+    pushEvent();
   },
   log: (a) => {
     oldConsole.log(a);
@@ -101,6 +122,7 @@ const newConsole = {
       type: "log",
       content: a,
     });
+    pushEvent();
   },
   profile: (a) => {
     oldConsole.profile(a);
@@ -108,6 +130,7 @@ const newConsole = {
       type: "profile",
       content: a,
     });
+    pushEvent();
   },
   profileEnd: (a) => {
     oldConsole.profileEnd(a);
@@ -115,6 +138,7 @@ const newConsole = {
       type: "profileEnd",
       content: a,
     });
+    pushEvent();
   },
   table: (a) => {
     oldConsole.table(a);
@@ -122,6 +146,7 @@ const newConsole = {
       type: "table",
       content: a,
     });
+    pushEvent();
   },
   time: (a) => {
     oldConsole.time(a);
@@ -129,6 +154,7 @@ const newConsole = {
       type: "time",
       content: a,
     });
+    pushEvent();
   },
   timeEnd: (a) => {
     oldConsole.timeEnd(a);
@@ -136,6 +162,7 @@ const newConsole = {
       type: "timeEnd",
       content: a,
     });
+    pushEvent();
   },
   timeLog: (a) => {
     oldConsole.timeLog(a);
@@ -143,6 +170,7 @@ const newConsole = {
       type: "timeLog",
       content: a,
     });
+    pushEvent();
   },
   timeStamp: (a) => {
     oldConsole.timeStamp(a);
@@ -150,6 +178,7 @@ const newConsole = {
       type: "timeStamp",
       content: a,
     });
+    pushEvent();
   },
   trace: (a) => {
     oldConsole.trace(a);
@@ -157,6 +186,7 @@ const newConsole = {
       type: "trace",
       content: a,
     });
+    pushEvent();
   },
   warn: (a) => {
     oldConsole.warn(a);
@@ -164,6 +194,7 @@ const newConsole = {
       type: "warn",
       content: a,
     });
+    pushEvent();
   },
 };
 

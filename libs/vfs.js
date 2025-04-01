@@ -81,7 +81,19 @@ const FILE_TYPE = {
 
 let templateFsLayout = {
   Registry: {
-    data: {},
+    data: {
+      libs: {
+        data: {},
+        metaData: {
+          created: Date.now(),
+          modified: Date.now(),
+          type: FILE_TYPE.Folder, // 1
+          owner: "root",
+          read: true,
+          write: true,
+        },
+      },
+    },
     metaData: {
       created: Date.now(),
       modified: Date.now(),
@@ -421,7 +433,7 @@ const Vfs = {
     return FILE_TYPE[metaData.type];
   },
   // Function to get the contents of a file at a given path
-  async readFile(path, fsObject = this.fileSystem,bypass = false) {
+  async readFile(path, fsObject = this.fileSystem, bypass = false) {
     return new Promise(async (resolve, reject) => {
       const parts = path.split("/");
       let current = fsObject;
@@ -476,9 +488,8 @@ const Vfs = {
         detail: { path },
       });
       return resolve(current);
-      })
+    });
   },
-
 
   async createFile(path, fsObject = this.fileSystem) {
     const parts = path.split("/");
@@ -509,70 +520,66 @@ const Vfs = {
     this.save();
   },
 
-
   async writeFile(path, contents, fsObject = this.fileSystem) {
     try {
-    if (typeof contents !== "string")
-      throw new Error("Tried to write a non-string to a file.");
-    const parts = path.split("/");
-    const filename = parts.pop();
-    let current = fsObject;
-    let metaData;
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
-      if (typeof current[part] === "undefined") {
-        return null;
+      if (typeof contents !== "string")
+        throw new Error("Tried to write a non-string to a file.");
+      const parts = path.split("/");
+      const filename = parts.pop();
+      let current = fsObject;
+      let metaData;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (typeof current[part] === "undefined") {
+          return null;
+        }
+        metaData = current[part].metaData;
+        current = current[part].data;
       }
-      metaData = current[part].metaData;
-      current = current[part].data;
-    }
 
-    if (metaData.type !== FILE_TYPE.Folder) return null;
-    if (metaData.write === false) return null;
-    if (metaData.read === false) return null;
-    if (current[filename].metaData.type !== FILE_TYPE.File) return null;
-    if (current[filename].metaData.write === false) return null;
-    if (current[filename].metaData.read === false) return null;
+      if (metaData.type !== FILE_TYPE.Folder) return null;
+      if (metaData.write === false) return null;
+      if (metaData.read === false) return null;
+      if (current[filename].metaData.type !== FILE_TYPE.File) return null;
+      if (current[filename].metaData.write === false) return null;
+      if (current[filename].metaData.read === false) return null;
 
-
-    // if file has a special
-    if (current[filename].data !== undefined) {
-      // special vfs import handler
-      if (current[filename].data.startsWith("vfsImport:")) {
-        const vfsImportPath = current[filename].data.substring(10);
-        if (vfsImportPath === "fs") return "vfsImportError:not-allowed";
-        await localforage.setItem(vfsImportPath, contents);
+      // if file has a special
+      if (current[filename].data !== undefined) {
+        // special vfs import handler
+        if (current[filename].data.startsWith("vfsImport:")) {
+          const vfsImportPath = current[filename].data.substring(10);
+          if (vfsImportPath === "fs") return "vfsImportError:not-allowed";
+          await localforage.setItem(vfsImportPath, contents);
+        } else {
+          current[filename].data = contents;
+        }
       } else {
-        current[filename].data = contents;
-      }
-    } else {
-      // if file is bigger than 8kb then put it into the special bin
-      if (contents.length > 8192) {
-        const vfsImportPath = Math.random().toString(36).substring(2);
-        if (vfsImportPath === "fs") return "vfsImportError:not-allowed";
+        // if file is bigger than 8kb then put it into the special bin
+        if (contents.length > 8192) {
+          const vfsImportPath = Math.random().toString(36).substring(2);
+          if (vfsImportPath === "fs") return "vfsImportError:not-allowed";
 
-        // save link to file
-        await localforage.setItem(vfsImportPath, contents);
-        current[filename].data = `vfsImport:${vfsImportPath}`;
-      } else {
-        // save normally
-        current[filename].data = contents;
+          // save link to file
+          await localforage.setItem(vfsImportPath, contents);
+          current[filename].data = `vfsImport:${vfsImportPath}`;
+        } else {
+          // save normally
+          current[filename].data = contents;
+        }
       }
+
+      current[filename].metaData.modified = Date.now();
+      this.save();
+      document.dispatchEvent(new CustomEvent("pluto.vfs-write"), {
+        detail: { path, contents },
+      });
+      return contents;
+    } catch (e) {
+      Vfs.createFile(path, fsObject);
+      Vfs.writeFile(path, contents, fsObject);
     }
-
-    current[filename].metaData.modified = Date.now();
-    this.save();
-    document.dispatchEvent(new CustomEvent("pluto.vfs-write"), {
-      detail: { path, contents },
-    });
-    return contents;
-  } catch (e) {
-    Vfs.createFile(path, fsObject);
-    Vfs.writeFile(path, contents, fsObject);
-  }
-
   },
-
 
   // Function to create a new folder at a given path
   async createFolder(path, fsObject = this.fileSystem) {
@@ -655,7 +662,7 @@ const Vfs = {
       metaData = parent[part].metaData;
       parent = parent[part].data;
     }
-        // maybe use readFile here so we don't
+    // maybe use readFile here so we don't
     // accidentally delete the key "fs"
 
     // if it's an import then handle it specially

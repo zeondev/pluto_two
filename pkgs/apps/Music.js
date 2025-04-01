@@ -20,7 +20,6 @@ export default {
   start: async function (Root) {
     let wrapper; // Lib.html | undefined
 
-    const Html = (await import("https://unpkg.com/@datkat21/html")).default;
 
     console.log("Hello from example package", Root);
 

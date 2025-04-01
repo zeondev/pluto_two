@@ -89,15 +89,15 @@ export default {
     // import prettierPluginEsTree from "https://unpkg.com/prettier@3.2.4/plugins/estree.mjs";
 
     const prettier = await import(
-      "https://unpkg.com/prettier/standalone.mjs"
+      "../../assets/prettier/standalone.mjs"
     );
     increaseCount();
     const prettierPluginBabel = (
-      await import("https://unpkg.com/prettier/plugins/babel.mjs")
+      await import("../../assets/prettier/plugins/babel.mjs")
     ).default;
     increaseCount();
     const prettierPluginEsTree = (
-      await import("https://unpkg.com/prettier/plugins/estree.mjs")
+      await import("../../assets/prettier/plugins/estree.mjs")
     ).default;
     increaseCount();
 

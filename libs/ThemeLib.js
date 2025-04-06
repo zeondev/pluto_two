@@ -123,12 +123,15 @@ export default {
         typeof appearanceConfig.useThemeWallpaper !== undefined &&
         appearanceConfig.useThemeWallpaper === true
       ) {
-        document.dispatchEvent(
-          new CustomEvent("pluto.wallpaper-change", {
-            detail: theme.wallpaper,
-          })
-        );
-        console.log("sent wallpaper change event!");
+        if (theme.wallpaper) {
+          document.documentElement.dataset.wallpaper = theme.wallpaper;
+          document.dispatchEvent(
+            new CustomEvent("pluto.wallpaper-change", {
+              detail: theme.wallpaper,
+            })
+          );
+          console.log("sent wallpaper change event!");
+        }
       }
     } catch (e) {
       stop(); // idk

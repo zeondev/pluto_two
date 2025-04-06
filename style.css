@@ -1934,9 +1934,55 @@ ul {
   border: 1px solid var(--outline);
 }
 
+.blur [class^="display-"] {
+  text-align: center;
+}
+
+.display-heading {
+  font-size: min(64px, max(48px, 5vmax));
+  font-weight: 600;
+}
+
+.display-subheading {
+  font-size: min(48px, max(18px, 1.5vmax));
+  font-weight: 550;
+}
+
+.display-padding {
+  padding: 15vmax;
+}
 
 svg.lucide:not(.ignore-css) {
   width: 24px;
   height: 24px;
   stroke-width: 2px;
+}
+
+.nf {
+  display: block !important;
+}
+
+.fc {
+  justify-content: center;
+  align-items: center;
+}
+
+.jc {
+  justify-content: center;
+}
+
+.js {
+  justify-content: flex-start;
+}
+
+.ac {
+  align-items: center;
+}
+
+.as {
+  align-items: flex-start;
+}
+
+.hide {
+  display: none !important;
 }

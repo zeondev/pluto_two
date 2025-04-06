@@ -11,7 +11,7 @@ let MyWindow;
 let server = "https://zeondev.github.io/PlutoTwo-AppStore/";
 
 const pkg = {
-  name: "thats-the.name",
+  name: "Store",
   type: "app",
   privs: 1,
   style: css`

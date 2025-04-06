@@ -123,8 +123,12 @@ const pkg = {
       })
       .appendMany(
         new Html("h1").html(langManager.getString("snake.name")),
-        new Html("span").text(langManager.getString("snake.forPluto")),
-        new Html("h3").html(langManager.getString("snake.begin"))
+        new Html("span")
+          .style({ color: "#fff" })
+          .text(langManager.getString("snake.forPluto")),
+        new Html("h3")
+          .style({ color: "#fff" })
+          .html(langManager.getString("snake.begin"))
       )
       .class("w-100", "h-100", "gameOverScreen")
       .on("click", () => {

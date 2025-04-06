@@ -15,7 +15,7 @@ try {
 }
 
 const langManager = {
-  langs: ["en_US", "de_DE"],
+  langs: ["en_US", "en_GB", "fr_FR", "es_ES", "de_DE", "pt_PT", "fil_PH"],
   async setLanguage(lang) {
     try {
       let languageModule = (await import(`./${lang}.js`)).default;

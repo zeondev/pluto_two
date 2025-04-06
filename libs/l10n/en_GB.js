@@ -9,7 +9,6 @@ export default {
     fr_FR: "French (France)",
   },
   generic: {
-    // get current local os from user agant
     pluto: "Pluto",
   },
   actions: {
@@ -30,8 +29,8 @@ export default {
     launch: "Launch app",
     delete: "Delete",
     space: "Space",
-    login: "Login",
-    logout: "Logout",
+    login: "Log in",
+    logout: "Log out",
     register: "Register",
     close: "Close",
     open: "Open",
@@ -48,11 +47,11 @@ export default {
     },
     p2: {
       chooseLang: "Choose your language.",
-      chooseLangMessage: "What do you speak?",
+      chooseLangMessage: "What language do you speak?",
     },
     p3: {
       chooseTheme: "Choose a theme.",
-      chooseThemeMessage: "Choose your favorite theme.",
+      chooseThemeMessage: "Choose your favourite theme.",
       themeDark: "Dark",
       themeLight: "Light",
       themeRed: "Red",
@@ -60,7 +59,7 @@ export default {
     },
     p4: {
       accounts: "Accounts.",
-      accountsMessage: "How do you want to log in?",
+      accountsMessage: "How would you like to log in?",
       account: "Account",
     },
     p5: {
@@ -103,7 +102,7 @@ export default {
     name: "Settings",
     system: "System",
     accounts: "Accounts",
-    appearence: "Appearence",
+    appearence: "Appearance",
     network: "Network",
     applications: "Applications",
     security: "Security",
@@ -120,7 +119,7 @@ export default {
     coreVersion: "Core version",
     supportedVersions: "Supported versions",
     errorCouldNotFetch: "Could not fetch from account service",
-    loginWithZeon: "Login with Zeon Account",
+    loginWithZeon: "Log in with Zeon Account",
     logOut: "Log out",
     zeonAccount: "Zeon Account",
     wantsLoginScreen: "Show the login screen when not logged in",
@@ -170,7 +169,6 @@ export default {
     action_runApp: "Run App",
     action_zoomIn: "Zoom In",
     action_format: "Prettify",
-    action_runApp: "Run App",
     action_aceSettings: "Ace Editor Settings",
     action_showAutocomplete: "Show Autocomplete",
     appHelp_string1:
@@ -201,8 +199,6 @@ export default {
     action_newDocument: "New Project",
     action_openDocument: "Open Project",
     action_save: "Save Project",
-    settings_wordWrap: "Word Wrap",
-    settings_fontSize: "Font Size",
   },
   photos: {
     name: "Photos",
@@ -232,6 +228,6 @@ export default {
     password: "Password",
     lockScreen_tapAnywhere: "Click anywhere to unlock",
     back: "Back",
-    login: "Login",
+    login: "Log in",
   },
 };

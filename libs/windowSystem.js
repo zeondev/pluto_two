@@ -296,7 +296,7 @@ export default {
                 Math.floor(this.window.parentNode.offsetWidth / 2) + "px";
               this.window.style.height =
                 this.window.parentNode.offsetHeight +
-                (checkDesktopPresence() ? -64 : 0) +
+                (checkDesktopPresence() ? -78 : 0) +
                 "px";
               this.window.style.top = 0;
               this.window.style.left = 0;
@@ -310,7 +310,7 @@ export default {
               // Height is height of parent minus dock height
               this.window.style.height =
                 this.window.parentNode.offsetHeight +
-                (checkDesktopPresence() ? -64 : 0) +
+                (checkDesktopPresence() ? -78 : 0) +
                 "px";
               // Top is top of screen (0)
               this.window.style.top = 0;
@@ -328,7 +328,8 @@ export default {
                 Math.floor(this.window.parentNode.offsetWidth / 2) + "px";
               this.window.style.height =
                 Math.floor(this.window.parentNode.offsetHeight / 2) +
-                (checkDesktopPresence() ? -64 : 0) +
+                39 +
+                (checkDesktopPresence() ? -78 : 0) +
                 "px";
               this.window.style.top = 0;
               this.window.style.left = 0;
@@ -339,7 +340,8 @@ export default {
                 Math.floor(this.window.parentNode.offsetWidth / 2) + "px";
               this.window.style.height =
                 Math.floor(this.window.parentNode.offsetHeight / 2) +
-                (checkDesktopPresence() ? -64 : 0) +
+                39 +
+                (checkDesktopPresence() ? -78 : 0) +
                 "px";
               this.window.style.top = 0;
               this.window.style.left =
@@ -353,12 +355,14 @@ export default {
                 Math.floor(this.window.parentNode.offsetWidth / 2) + "px";
               this.window.style.height =
                 Math.floor(this.window.parentNode.offsetHeight / 2) +
-                (checkDesktopPresence() ? -64 : 0) +
+                39 +
+                (checkDesktopPresence() ? -78 : 0) +
                 "px";
               this.window.style.top =
                 this.window.parentNode.offsetHeight -
                 parseInt(this.window.style.height) +
-                (checkDesktopPresence() ? -64 : 0) +
+                // 39 +
+                (checkDesktopPresence() ? -78 : 0) +
                 "px";
               console.log();
               this.window.style.left = 0;
@@ -367,14 +371,16 @@ export default {
             case "bottom-right":
               this.window.style.width =
                 Math.floor(this.window.parentNode.offsetWidth / 2) + "px";
+              console.log(this.window.parentNode);
               this.window.style.height =
                 Math.floor(this.window.parentNode.offsetHeight / 2) +
-                (checkDesktopPresence() ? -64 : 0) +
+                39 +
+                (checkDesktopPresence() ? -78 : 0) +
                 "px";
               this.window.style.top =
                 this.window.parentNode.offsetHeight -
                 parseInt(this.window.style.height) +
-                (checkDesktopPresence() ? -64 : 0) +
+                (checkDesktopPresence() ? -78 : 0) +
                 "px";
               console.log();
               this.window.style.left =

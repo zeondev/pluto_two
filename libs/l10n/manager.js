@@ -15,7 +15,21 @@ try {
 }
 
 const langManager = {
-  langs: ["en_US", "en_GB", "fr_FR", "es_ES", "de_DE", "pt_PT", "fil_PH"],
+  // langs: ["en_US", "en_GB", "fr_FR", "es_ES", "de_DE", "pt_PT", "fil_PH"],
+  langs: [
+    "de_DE", // German
+    "en_GB", // English (United Kingdom)
+    "en_US", // English (United States)
+    "es_ES", // Spanish
+    "fil_PH", // Filipino
+    "fr_FR", // French
+    "it_IT", // Italian
+    "nl_NL", // Dutch
+    "pt_PT", // Portuguese
+    "ru_RU", // Russian
+    "zh_CN", // Chinese (Simplified)
+    "zh_TW", // Chinese (Traditional)
+  ],
   async setLanguage(lang) {
     try {
       let languageModule = (await import(`./${lang}.js`)).default;

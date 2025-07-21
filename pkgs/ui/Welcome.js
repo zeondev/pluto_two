@@ -1,4 +1,4 @@
-import Html from '../../libs/html.js';
+import Html from "../../libs/html.js";
 import Ws from "/libs/windowSystem.js";
 import compatibility from "/libs/compatibility.js";
 import Vfs from "../../libs/vfs.js";
@@ -43,6 +43,7 @@ const pkg = {
       border: var(--outline) solid 1px;
       border-radius: 10px;
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       // text-align: center;
       max-width: 100%;
       width: 46.875rem;

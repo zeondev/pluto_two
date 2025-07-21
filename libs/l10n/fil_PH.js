@@ -7,6 +7,11 @@ export default {
     es_ES: "Espanyol (Espanya)",
     fr_FR: "Pranses (Pransya)",
     en_GB: "Ingles (Reyno Unido)",
+    it_IT: "Italyano (Italya)",
+    nl_NL: "Olandes (Olanda)",
+    ru_RU: "Ruso (Rusya)",
+    zh_CN: "Tsino (Tsina)",
+    zh_TW: "Tsino (Taiwan)",
   },
   generic: {
     pluto: "Pluto",

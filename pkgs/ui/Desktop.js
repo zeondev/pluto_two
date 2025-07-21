@@ -68,7 +68,6 @@ export default {
       width: 3.4rem;
       height: 3.4rem;
       display: flex;
-      // background-color: var(--text);
       align-self: center;
       align-items: center;
       align-content: center;
@@ -129,6 +128,8 @@ export default {
       z-index: 9999999;
       padding: 6px;
       display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
       flex-direction: column;
       gap: 6px;
     }
@@ -198,7 +199,8 @@ export default {
     }
 
     .desktop .startMenu .startMenuContent {
-      height: 100%;
+      height: auto !important;
+      min-height: 0 !important;
       width: 100%;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -236,6 +238,10 @@ export default {
 
     .desktop .startMenu .startMenuContent .app:hover {
       transform: scale(1.2);
+    }
+
+    .allAppsContainer {
+      width: 100%;
     }
 
     .allAppsContainer .content {
@@ -336,8 +342,6 @@ export default {
 
     checkTheme();
 
-
-
     let allStockApps = [
       {
         name: "Music",
@@ -428,19 +432,17 @@ export default {
         icon: "./assets/apps/TaskManager.svg",
         onClick: async () => {
           await Root.Core.Packages.Run("apps:TaskManager", true, true);
-        }
-      }
+        },
+      },
     ];
 
     const installedApps = (await Vfs.list("Root/Pluto/apps"))
-    .filter((f) => f.item.endsWith(".app") || f.item.endsWith(".pml"))
-    .map((f) => {
-      return { type: "installed", item: f.item };
-    });
+      .filter((f) => f.item.endsWith(".app") || f.item.endsWith(".pml"))
+      .map((f) => {
+        return { type: "installed", item: f.item };
+      });
     let asApps = [];
-    const asExists = await Vfs.whatIs(
-      "Registry/AppStore/_AppStoreIndex.json"
-    );
+    const asExists = await Vfs.whatIs("Registry/AppStore/_AppStoreIndex.json");
     if (asExists !== null) {
       console.log(asExists);
       asApps = (await Vfs.list("Registry/AppStore"))
@@ -455,31 +457,43 @@ export default {
     let i = 0;
     for (i = 0; i < tempList.length; i++) {
       let app = tempList[i];
-      let name = ""
-      let icon = ""
+      let name = "";
+      let icon = "";
       if (app.type === "appStore") {
-        name = JSON.parse(await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json"))[String(app.item).replace(".app", "").replace(".pml", "")].name
-        icon = JSON.parse(await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json"))[String(app.item).replace(".app", "").replace(".pml", "")].icon
-        alert(name)
+        name = JSON.parse(
+          await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json")
+        )[String(app.item).replace(".app", "").replace(".pml", "")].name;
+        icon = JSON.parse(
+          await Vfs.readFile("Registry/AppStore/_AppStoreIndex.json")
+        )[String(app.item).replace(".app", "").replace(".pml", "")].icon;
+        alert(name);
       } else {
-        name = app.item.replace(".app", "").replace(".pml", "")
+        name = app.item.replace(".app", "").replace(".pml", "");
         const data = await FileMappings.retrieveAllMIMEdata(
           "Root/Desktop/" + app.item
         );
         // regex all special characters for data uri including < > / \ : * ? " ' |
-        icon = "data:image/svg+xml," + encodeURIComponent(icons[String(data.icon)]);
+        icon =
+          "data:image/svg+xml," + encodeURIComponent(icons[String(data.icon)]);
       }
-        const data = await FileMappings.retrieveAllMIMEdata(
-          "Root/Desktop/" + app.item
-        );
-        tempList2.push({"name": name, "icon": icon, "onClick": async () => {
-          await Root.Core.Packages.Run("apps:" + app.item.replace(".app", "").replace(".pml", ""), true, true);
-        }})
-        console.error(data)
-
+      const data = await FileMappings.retrieveAllMIMEdata(
+        "Root/Desktop/" + app.item
+      );
+      tempList2.push({
+        name: name,
+        icon: icon,
+        onClick: async () => {
+          await Root.Core.Packages.Run(
+            "apps:" + app.item.replace(".app", "").replace(".pml", ""),
+            true,
+            true
+          );
+        },
+      });
+      console.error(data);
     }
 
-    let allAppsList = [...allStockApps, ...tempList2]
+    let allAppsList = [...allStockApps, ...tempList2];
     let startMenuList = [
       {
         name: "Music",
@@ -598,49 +612,49 @@ export default {
       .appendMany(...startMenuApps);
     let allAppsContent = new Html("div").class("content").appendMany(
       ...allAppsList.map((app) => {
-        return new Html("div").class("app").appendMany(
-          new Html("img").class("icon").attr({
-            src: app.icon,
-          }),
-          new Html("span").class("title").html(app.name)
-        ).on("click", async () => {
-          if (startMenu.elm.classList.contains("show")) {
-            startMenu.class(
-              "slideInCenteredFromBottom",
-              "slideOutCenteredFromBottom"
-            );
-            setTimeout(() => {
-              startMenu.class("hide", "show");
-            }, 300);
-          } else {
-            startMenu.class(
-              "hide",
-              "show",
-              "slideInCenteredFromBottom",
-              "slideOutCenteredFromBottom"
-            );
-          }
-          let thisElm = allApps.qs(".allApps").elm
-          thisElm.classList.toggle("active");
+        return new Html("div")
+          .class("app")
+          .appendMany(
+            new Html("img").class("icon").attr({
+              src: app.icon,
+            }),
+            new Html("span").class("title").html(app.name)
+          )
+          .on("click", async () => {
+            if (startMenu.elm.classList.contains("show")) {
+              startMenu.class(
+                "slideInCenteredFromBottom",
+                "slideOutCenteredFromBottom"
+              );
+              setTimeout(() => {
+                startMenu.class("hide", "show");
+              }, 300);
+            } else {
+              startMenu.class(
+                "hide",
+                "show",
+                "slideInCenteredFromBottom",
+                "slideOutCenteredFromBottom"
+              );
+            }
+            let thisElm = allApps.qs(".allApps").elm;
+            thisElm.classList.toggle("active");
             var content = thisElm.nextElementSibling;
             if (content.style.display === "flex") {
               content.style.maxHeight = null;
               thisElm.innerHTML = icons.chevronUp + "All Apps";
-      
+
               setTimeout(() => {
                 content.scrollTo(0, 0);
                 content.style.display = "none";
               }, 500);
             } else {
-
-
-
               content.style.display = "flex";
               thisElm.innerHTML = icons.chevronDown + "All Apps";
               content.style.maxHeight = content.scrollHeight + "px";
             }
-          app.onClick()
-        });
+            app.onClick();
+          });
       })
     );
     let allApps = new Html("div")

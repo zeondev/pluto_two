@@ -42,6 +42,7 @@ export default {
       let date = new Html("span")
         .class("display-subheading")
         .text("Monday, May 29");
+      const timeDateContainer = new Html("div").class("col", "fc", "gap");
       let pastMinute;
 
       let image = await generateNoiseImage(screen.width, screen.height);
@@ -77,8 +78,8 @@ export default {
       let service = { ref: Accounts };
 
       async function initialScreen() {
-        time.classOff("hide");
-        date.classOff("hide");
+        timeDateContainer.classOff("hide");
+        bottomText.classOff("hide");
         middleDiv.clear();
 
         if (!service && !service.ref) {
@@ -140,8 +141,8 @@ export default {
                   .on("click", (e) => {
                     bottomText.clear();
 
-                    time.classOn("hide");
-                    date.classOn("hide");
+                    timeDateContainer.classOn("hide");
+                    bottomText.classOn("hide");
 
                     const userInput = new Html("span")
                       //   .attr({
@@ -286,7 +287,7 @@ export default {
           "--above-wallpaper": bgString,
         })
         .appendMany(
-          new Html("div").class("col", "fc", "gap").appendMany(time, date),
+          timeDateContainer.appendMany(time, date),
           middleDiv,
           bottomText
         )

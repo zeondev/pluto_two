@@ -26,6 +26,7 @@ const langManager = {
     "it_IT", // Italian
     "nl_NL", // Dutch
     "pt_PT", // Portuguese
+	"ro_RO", // Romanian
     "ru_RU", // Russian
     "zh_CN", // Chinese (Simplified)
     "zh_TW", // Chinese (Traditional)

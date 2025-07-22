@@ -9,6 +9,7 @@ export default {
     fr_FR: "French (France)",
     it_IT: "Italian (Italy)",
     nl_NL: "Dutch (Netherlands)",
+	ro_RO: "Romanian (Romania)",
     ru_RU: "Russian (Russia)",
     zh_CN: "Chinese (China)",
     zh_TW: "Chinese (Taiwan)",

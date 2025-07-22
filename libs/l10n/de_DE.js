@@ -9,6 +9,7 @@ export default {
     fil_PH: "Filipino (Philippinen)",
     it_IT: "Italienisch (Italien)",
     nl_NL: "Niederländisch (Niederlande)",
+	ro_RO: "Rumänisch (Rumänien)",
     ru_RU: "Russisch (Russland)",
     zh_CN: "Chinesisch (China)",
     zh_TW: "Chinesisch (Taiwan)",

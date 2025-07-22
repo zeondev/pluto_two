@@ -9,6 +9,7 @@ export default {
     en_GB: "Inglés (Reino Unido)",
     it_IT: "Italiano (Italia)",
     nl_NL: "Neerlandés (Países Bajos)",
+	ro_RO: "Rumano (Rumania)",
     ru_RU: "Ruso (Rusia)",
     zh_CN: "Chino (China)",
     zh_TW: "Chino (Taiwán)",

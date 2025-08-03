@@ -138,6 +138,28 @@ export default {
       opensWith: "apps:Music",
       icon: "fileAudio",
     },
+    
+    flac: {
+      type: "audio",
+      label: "FLAC audio",
+      opensWith: "apps:Music",
+      icon: "fileAudio",
+    },
+    
+    ogg: {
+      type: "audio",
+      label: "OGG audio (Opus only)",
+      opensWith: "apps:Music",
+      icon: "fileAudio",
+    },
+
+    opus: {
+      type: "audio",
+      label: "Opus audio",
+      opensWith: "apps:Music",
+      icon: "fileAudio",
+    },
+    
     shrt: {
       type: "text",
       label: "Desktop shortcut",
